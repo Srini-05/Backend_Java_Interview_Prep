@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Backend Interview Preparation</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #1c2330;
+    --border: #30363d;
+    --accent: #f78166;
+    --accent2: #79c0ff;
+    --accent3: #56d364;
+    --accent4: #d2a8ff;
+    --accent5: #ffa657;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --code-bg: #13181f;
+    --tag-bg: rgba(247,129,102,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ─── HERO HEADER ─── */
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1f2e 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 56px 40px 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(121,192,255,0.08) 0%, transparent 70%);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 40px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(247,129,102,0.06) 0%, transparent 70%);
+  }
+  .hero-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-block;
+    background: var(--tag-bg);
+    border: 1px solid rgba(247,129,102,0.3);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: 16px;
+    font-weight: 300;
+    max-width: 560px;
+    margin-bottom: 32px;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat-num {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent3);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* ─── LAYOUT ─── */
+  .container { max-width: 900px; margin: 0 auto; padding: 48px 32px; }
+
+  /* ─── TABLE OF CONTENTS ─── */
+  .toc {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+  }
+  .toc h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 16px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    text-decoration: none;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .toc-item:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(121,192,255,0.05); }
+  .toc-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ─── SECTION HEADERS ─── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 56px 0 24px;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .section-title-wrap h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .section-title-wrap p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .section-divider {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── ACCORDION ─── */
+  details {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  details[open] { border-color: rgba(121,192,255,0.35); }
+  details[open] summary { background: rgba(121,192,255,0.04); }
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 22px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { background: rgba(121,192,255,0.04); }
+
+  .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--tag-bg);
+    border: 1px solid rgba(247,129,102,0.25);
+    padding: 3px 9px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    min-width: 44px;
+    text-align: center;
+  }
+  .q-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.4;
+  }
+  .q-chevron {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s, background 0.2s;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+  details[open] .q-chevron {
+    transform: rotate(180deg);
+    background: rgba(121,192,255,0.1);
+    border-color: rgba(121,192,255,0.3);
+    color: var(--accent2);
+  }
+
+  .answer-body {
+    padding: 0 22px 22px 22px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── QUICK ANSWER BANNER ─── */
+  .quick-answer {
+    background: rgba(86,211,100,0.08);
+    border-left: 3px solid var(--accent3);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: #b5e8bc;
+    line-height: 1.6;
+  }
+  .quick-answer strong { color: var(--accent3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+
+  /* ─── BODY TEXT ─── */
+  .answer-body p { color: var(--text-muted); margin-bottom: 14px; font-size: 14px; }
+  .answer-body h4 { color: var(--accent2); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; margin: 20px 0 10px; font-family: 'JetBrains Mono', monospace; }
+  .answer-body ul, .answer-body ol { color: var(--text-muted); padding-left: 20px; margin-bottom: 14px; font-size: 14px; }
+  .answer-body li { margin-bottom: 6px; }
+  .answer-body strong { color: var(--text); }
+
+  /* ─── CODE BLOCKS ─── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    margin: 14px 0;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    color: #e6edf3;
+  }
+  pre code .kw { color: #ff7b72; }
+  pre code .str { color: #a5d6ff; }
+  pre code .cm { color: #8b949e; font-style: italic; }
+  pre code .cl { color: #ffa657; }
+  pre code .num { color: #79c0ff; }
+
+  /* ─── TABLES ─── */
+  .table-wrap { overflow-x: auto; margin: 14px 0; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--bg3);
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(48,54,61,0.6);
+    color: var(--text-muted);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(121,192,255,0.03); }
+  td strong { color: var(--text); }
+
+  /* ─── TIP BOX ─── */
+  .tip {
+    background: rgba(210,168,255,0.07);
+    border: 1px solid rgba(210,168,255,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #c9a8f5;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .tip::before { content: '💡'; flex-shrink: 0; }
+
+  /* ─── TAGS ─── */
+  .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px;
+    font-weight: 600;
+  }
+  .tag-blue { background: rgba(121,192,255,0.12); color: var(--accent2); border: 1px solid rgba(121,192,255,0.2); }
+  .tag-green { background: rgba(86,211,100,0.1); color: var(--accent3); border: 1px solid rgba(86,211,100,0.2); }
+  .tag-orange { background: rgba(255,166,87,0.1); color: var(--accent5); border: 1px solid rgba(255,166,87,0.2); }
+  .tag-pink { background: rgba(210,168,255,0.1); color: var(--accent4); border: 1px solid rgba(210,168,255,0.2); }
+
+  /* ─── NEW BADGE ─── */
+  .new-badge {
+    display: inline-block;
+    background: rgba(86,211,100,0.12);
+    color: var(--accent3);
+    border: 1px solid rgba(86,211,100,0.25);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .hero { padding: 36px 20px; }
+    .container { padding: 32px 16px; }
+    .toc-grid { grid-template-columns: 1fr 1fr; }
+    .hero-stats { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">&#x2615; Interview Prep Guide</div>
+    <h1>Java Backend<br><span>Interview Questions</span></h1>
+    <p class="hero-sub">A complete, structured guide covering Java Basics to Advanced — with clear explanations, code examples, and comparison tables.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">50+</span><span class="stat-label">Questions</span></div>
+      <div class="stat"><span class="stat-num">8</span><span class="stat-label">Topic Sections</span></div>
+      <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Accordion UI</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <h2>// Contents</h2>
+    <div class="toc-grid">
+      <a href="#basics" class="toc-item"><span class="toc-dot" style="background:#79c0ff"></span>Java Basics</a>
+      <a href="#oop" class="toc-item"><span class="toc-dot" style="background:#56d364"></span>OOP Concepts</a>
+      <a href="#keywords" class="toc-item"><span class="toc-dot" style="background:#ffa657"></span>Keywords</a>
+      <a href="#collections" class="toc-item"><span class="toc-dot" style="background:#d2a8ff"></span>Collections</a>
+      <a href="#strings" class="toc-item"><span class="toc-dot" style="background:#f78166"></span>Strings</a>
+      <a href="#advanced" class="toc-item"><span class="toc-dot" style="background:#79c0ff"></span>Java Advanced</a>
+      <a href="#threads" class="toc-item"><span class="toc-dot" style="background:#56d364"></span>Multi-threading</a>
+      <a href="#spring" class="toc-item"><span class="toc-dot" style="background:#ffa657"></span>Spring Framework</a>
+      <a href="#exceptions" class="toc-item"><span class="toc-dot" style="background:#d2a8ff"></span>Exceptions</a>
+      <a href="#extra" class="toc-item"><span class="toc-dot" style="background:#f78166"></span>Bonus Q&amp;A</a>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 1: JAVA BASICS                 -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="basics" class="section-header">
+    <div class="section-icon" style="background:rgba(121,192,255,0.1)">☕</div>
+    <div class="section-title-wrap">
+      <h2>Java Basics</h2>
+      <p>Fundamentals every Java developer must know cold</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q1 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 01</span>
+      <span class="q-title">What is Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Java is a high-level, platform-independent, object-oriented programming language that runs on the JVM — famous for "Write Once, Run Anywhere."</div>
+      <h4>What Makes Java Special?</h4>
+      <p>Java was created by James Gosling at Sun Microsystems in 1995. The big idea was simple but revolutionary: write your code once, and it runs on any device that has a JVM (Java Virtual Machine). This is called <strong>platform independence</strong>.</p>
+      <p>When you write Java code, the compiler converts it into <strong>bytecode</strong> — not machine code. That bytecode is then run by the JVM on any platform (Windows, Linux, Mac, phone), making Java truly portable.</p>
+      <h4>Key Features at a Glance</h4>
+      <ul>
+        <li><strong>Platform Independent</strong> — Write Once, Run Anywhere (WORA)</li>
+        <li><strong>Object-Oriented</strong> — Everything is organized around objects and classes</li>
+        <li><strong>Automatic Memory Management</strong> — Garbage Collector handles memory for you</li>
+        <li><strong>Strongly Typed</strong> — Type errors caught at compile time</li>
+        <li><strong>Multithreaded</strong> — Built-in support for running tasks concurrently</li>
+        <li><strong>Rich Ecosystem</strong> — Millions of libraries, Spring, Hibernate, Maven, etc.</li>
+      </ul>
+      <h4>Where Is Java Used?</h4>
+      <ul>
+        <li>🏦 Enterprise Banking Applications (SWIFT, trading systems)</li>
+        <li>📱 Android App Development</li>
+        <li>🌐 Web Backends (Spring Boot REST APIs)</li>
+        <li>📊 Big Data (Apache Hadoop, Spark)</li>
+        <li>☁️ Cloud Applications (microservices)</li>
+      </ul>
+      <div class="tip">In interviews, always mention WORA, garbage collection, and a real-world use case like banking or Android.</div>
+    </div>
+  </details>
+
+  <!-- Q2 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 02</span>
+      <span class="q-title">What are the main features of Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Java is platform-independent, object-oriented, secure, robust, multithreaded, and architecturally neutral — designed for reliability and portability.</div>
+      <h4>The 10 Core Features</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>What It Means</th></tr>
+          <tr><td><strong>Platform Independent</strong></td><td>Bytecode runs on any JVM — WORA principle</td></tr>
+          <tr><td><strong>Object-Oriented</strong></td><td>Code organized around objects with encapsulation, inheritance, polymorphism</td></tr>
+          <tr><td><strong>Secure</strong></td><td>No explicit pointers, bytecode verifier, Security Manager</td></tr>
+          <tr><td><strong>Robust</strong></td><td>Strong type checking, exception handling, garbage collection</td></tr>
+          <tr><td><strong>Simple</strong></td><td>No complex C++ features like pointers, operator overloading</td></tr>
+          <tr><td><strong>Multithreaded</strong></td><td>Built-in Thread, Runnable, ExecutorService APIs</td></tr>
+          <tr><td><strong>High Performance</strong></td><td>JIT (Just-In-Time) compiler optimizes frequently used code</td></tr>
+          <tr><td><strong>Distributed</strong></td><td>RMI, Sockets, networking APIs built in</td></tr>
+          <tr><td><strong>Portable</strong></td><td>No implementation-specific sizes for primitives</td></tr>
+          <tr><td><strong>Dynamic</strong></td><td>Classes loaded at runtime via ClassLoader</td></tr>
+        </table>
+      </div>
+      <div class="tip">Interviewers love when you explain WHY a feature matters — e.g., "No pointers means fewer memory corruption bugs."</div>
+    </div>
+  </details>
+
+  <!-- Q3 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 03</span>
+      <span class="q-title">What is JVM, JRE, and JDK? What is the difference?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>JVM executes bytecode, JRE = JVM + libraries to run apps, JDK = JRE + compiler + tools to build apps. They are nested: JDK ⊃ JRE ⊃ JVM.</div>
+      <h4>Simple Analogy: The Kitchen</h4>
+      <ul>
+        <li><strong>JVM</strong> = The stove — it actually does the cooking (executes code)</li>
+        <li><strong>JRE</strong> = The kitchen — stove + utensils to run a recipe (run apps)</li>
+        <li><strong>JDK</strong> = Kitchen + recipe book + chef's tools — to create and run recipes (develop apps)</li>
+      </ul>
+      <h4>Comparison Table</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Component</th><th>Full Form</th><th>Contains</th><th>Used For</th></tr>
+          <tr><td><strong>JVM</strong></td><td>Java Virtual Machine</td><td>Interpreter, JIT, GC, Runtime</td><td>Executing bytecode</td></tr>
+          <tr><td><strong>JRE</strong></td><td>Java Runtime Environment</td><td>JVM + Core Libraries</td><td>Running Java applications</td></tr>
+          <tr><td><strong>JDK</strong></td><td>Java Development Kit</td><td>JRE + javac + javadoc + tools</td><td>Developing Java applications</td></tr>
+        </table>
+      </div>
+      <h4>Key Tools Inside JDK</h4>
+      <ul>
+        <li><code>javac</code> — Java compiler (converts .java → .class bytecode)</li>
+        <li><code>java</code> — Launcher that starts JVM and runs your program</li>
+        <li><code>javadoc</code> — Generates HTML documentation from comments</li>
+        <li><code>jar</code> — Packages .class files into a JAR archive</li>
+        <li><code>jdb</code> — Java debugger</li>
+      </ul>
+      <div class="tip">Rule of thumb: You need JDK to write code, JRE to run code, and JVM is always running under the hood.</div>
+    </div>
+  </details>
+
+  <!-- Q4 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 04</span>
+      <span class="q-title">What are the data types in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Java has 8 primitive types (byte, short, int, long, float, double, char, boolean) and reference types (objects, arrays, strings, interfaces).</div>
+      <h4>Primitive Data Types — The 8 Fundamentals</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Type</th><th>Size</th><th>Range</th><th>Default</th><th>Example</th></tr>
+          <tr><td><strong>byte</strong></td><td>8-bit</td><td>-128 to 127</td><td>0</td><td>byte b = 100;</td></tr>
+          <tr><td><strong>short</strong></td><td>16-bit</td><td>-32,768 to 32,767</td><td>0</td><td>short s = 5000;</td></tr>
+          <tr><td><strong>int</strong></td><td>32-bit</td><td>-2^31 to 2^31-1</td><td>0</td><td>int age = 25;</td></tr>
+          <tr><td><strong>long</strong></td><td>64-bit</td><td>-2^63 to 2^63-1</td><td>0L</td><td>long id = 123456789L;</td></tr>
+          <tr><td><strong>float</strong></td><td>32-bit</td><td>~3.4e-38 to ~3.4e+38</td><td>0.0f</td><td>float pi = 3.14f;</td></tr>
+          <tr><td><strong>double</strong></td><td>64-bit</td><td>~1.8e-308 to ~1.8e+308</td><td>0.0d</td><td>double salary = 50000.0;</td></tr>
+          <tr><td><strong>char</strong></td><td>16-bit</td><td>0 to 65,535 (Unicode)</td><td>'\u0000'</td><td>char grade = 'A';</td></tr>
+          <tr><td><strong>boolean</strong></td><td>1-bit</td><td>true / false</td><td>false</td><td>boolean active = true;</td></tr>
+        </table>
+      </div>
+      <h4>Reference Types</h4>
+      <ul>
+        <li><strong>String</strong> — "Hello World"</li>
+        <li><strong>Arrays</strong> — int[] numbers = {1, 2, 3}</li>
+        <li><strong>Objects</strong> — Any class instance</li>
+        <li><strong>Interfaces</strong> — References to interface implementations</li>
+      </ul>
+      <h4>Primitives vs Reference Types</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Aspect</th><th>Primitive</th><th>Reference</th></tr>
+          <tr><td>Storage</td><td>Stack memory</td><td>Heap memory (reference on stack)</td></tr>
+          <tr><td>Default value</td><td>0 / false / '\u0000'</td><td>null</td></tr>
+          <tr><td>Performance</td><td>Faster</td><td>Slightly slower</td></tr>
+          <tr><td>Used in Collections</td><td>❌ No (use wrappers)</td><td>✅ Yes</td></tr>
+          <tr><td>Null allowed</td><td>❌ No</td><td>✅ Yes</td></tr>
+        </table>
+      </div>
+      <div class="tip">For financial calculations, always use BigDecimal instead of float/double to avoid floating-point precision issues!</div>
+    </div>
+  </details>
+
+  <!-- Q5 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 05</span>
+      <span class="q-title">What are access modifiers in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Access modifiers control visibility: public (everywhere), protected (package + subclasses), default (same package), private (same class only).</div>
+      <h4>The 4 Access Levels</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Modifier</th><th>Same Class</th><th>Same Package</th><th>Subclass</th><th>Anywhere</th></tr>
+          <tr><td><strong>public</strong></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td><strong>protected</strong></td><td>✅</td><td>✅</td><td>✅</td><td>❌</td></tr>
+          <tr><td><strong>default</strong> (no keyword)</td><td>✅</td><td>✅</td><td>❌</td><td>❌</td></tr>
+          <tr><td><strong>private</strong></td><td>✅</td><td>❌</td><td>❌</td><td>❌</td></tr>
+        </table>
+      </div>
+      <h4>Code Example</h4>
+      <pre><code><span class="kw">public class</span> <span class="cl">Person</span> {
+    <span class="kw">public</span>    <span class="cl">String</span> name;     <span class="cm">// accessible from anywhere</span>
+    <span class="kw">protected</span> <span class="kw">int</span>    age;      <span class="cm">// package + subclasses</span>
+              <span class="cl">String</span> address;  <span class="cm">// default: same package only</span>
+    <span class="kw">private</span>   <span class="cl">String</span> ssn;      <span class="cm">// this class ONLY</span>
+}</code></pre>
+      <h4>When To Use Each?</h4>
+      <ul>
+        <li><strong>private</strong> — Always for fields (encapsulation principle). Fields should never be directly public.</li>
+        <li><strong>public</strong> — For API methods the outside world needs to call.</li>
+        <li><strong>protected</strong> — For methods/fields meant to be extended by subclasses.</li>
+        <li><strong>default</strong> — For package-level internal helper classes and utilities.</li>
+      </ul>
+      <div class="tip">Always start with the most restrictive access (private) and open up only when needed. This is the Principle of Least Privilege.</div>
+    </div>
+  </details>
+
+  <!-- Q6 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 06</span>
+      <span class="q-title">What is the difference between == and equals()?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>== checks if two references point to the same memory location. equals() checks if two objects have the same logical value/content.</div>
+      <h4>Simple Memory Model</h4>
+      <p>Think of it this way: two different houses can look identical (same content), but they are at different addresses (different references). <code>==</code> compares the <em>address</em>. <code>equals()</code> compares what's <em>inside</em>.</p>
+      <h4>Comparison Table</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Aspect</th><th>==</th><th>equals()</th></tr>
+          <tr><td>What it compares</td><td>Memory address / reference</td><td>Logical content / value</td></tr>
+          <tr><td>For primitives</td><td>Compares values directly</td><td>N/A (not applicable)</td></tr>
+          <tr><td>For objects</td><td>Checks if same instance</td><td>Checks if logically equal</td></tr>
+          <tr><td>Can be overridden</td><td>❌ No</td><td>✅ Yes (always override with hashCode)</td></tr>
+        </table>
+      </div>
+      <h4>Code Example</h4>
+      <pre><code><span class="cl">String</span> s1 = <span class="kw">new</span> <span class="cl">String</span>(<span class="str">"hello"</span>);
+<span class="cl">String</span> s2 = <span class="kw">new</span> <span class="cl">String</span>(<span class="str">"hello"</span>);
+<span class="cl">String</span> s3 = s1; <span class="cm">// same reference</span>
+
+<span class="cl">System</span>.out.println(s1 == s2);       <span class="cm">// false — different objects in heap</span>
+<span class="cl">System</span>.out.println(s1.equals(s2));  <span class="cm">// true  — same content "hello"</span>
+<span class="cl">System</span>.out.println(s1 == s3);       <span class="cm">// true  — same reference</span>
+
+<span class="cm">// String pool behavior</span>
+<span class="cl">String</span> a = <span class="str">"hello"</span>;  <span class="cm">// from pool</span>
+<span class="cl">String</span> b = <span class="str">"hello"</span>;  <span class="cm">// same pool object</span>
+<span class="cl">System</span>.out.println(a == b); <span class="cm">// true! (both point to pool)</span></code></pre>
+      <div class="tip">Always use equals() for String comparison! And whenever you override equals(), you MUST also override hashCode() — otherwise HashMaps and HashSets will break.</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 2: OOP CONCEPTS                -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="oop" class="section-header">
+    <div class="section-icon" style="background:rgba(86,211,100,0.1)">🧱</div>
+    <div class="section-title-wrap">
+      <h2>OOP Concepts</h2>
+      <p>The four pillars and key object-oriented principles</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q7 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 07</span>
+      <span class="q-title">What is Inheritance?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Inheritance lets a child class acquire the properties and behaviours of a parent class using the extends keyword, promoting code reuse and IS-A relationships.</div>
+      <h4>Real-World Analogy</h4>
+      <p>A <strong>Dog</strong> IS-A <strong>Animal</strong>. A Dog inherits the ability to breathe, eat, and sleep from Animal — and adds its own behaviours like barking. You don't rewrite those common behaviours for every animal.</p>
+      <h4>Code Example</h4>
+      <pre><code><span class="kw">class</span> <span class="cl">Animal</span> {
+    <span class="cl">String</span> name;
+    <span class="kw">void</span> eat() { <span class="cl">System</span>.out.println(<span class="str">"Animal eats"</span>); }
+    <span class="kw">void</span> breathe() { <span class="cl">System</span>.out.println(<span class="str">"Animal breathes"</span>); }
+}
+
+<span class="kw">class</span> <span class="cl">Dog</span> <span class="kw">extends</span> <span class="cl">Animal</span> {     <span class="cm">// Dog IS-A Animal</span>
+    <span class="kw">void</span> bark() { <span class="cl">System</span>.out.println(<span class="str">"Woof!"</span>); }
+}
+
+<span class="cl">Dog</span> dog = <span class="kw">new</span> <span class="cl">Dog</span>();
+dog.eat();    <span class="cm">// inherited from Animal</span>
+dog.bark();   <span class="cm">// Dog's own method</span></code></pre>
+      <h4>Types of Inheritance in Java</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Type</th><th>Supported?</th><th>Notes</th></tr>
+          <tr><td>Single</td><td>✅ Yes</td><td>A extends B</td></tr>
+          <tr><td>Multilevel</td><td>✅ Yes</td><td>A → B → C chain</td></tr>
+          <tr><td>Hierarchical</td><td>✅ Yes</td><td>Many classes extend one parent</td></tr>
+          <tr><td>Multiple</td><td>❌ No (classes)</td><td>Achieved through interfaces</td></tr>
+          <tr><td>Hybrid</td><td>❌ No (classes)</td><td>Achieved through interfaces</td></tr>
+        </table>
+      </div>
+      <div class="tip">Java doesn't allow multiple class inheritance to avoid the "Diamond Problem." Use interfaces to achieve it safely.</div>
+    </div>
+  </details>
+
+  <!-- Q8 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 08</span>
+      <span class="q-title">What is Polymorphism?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Polymorphism means "many forms" — the same method name behaves differently based on context. Achieved via overloading (compile-time) and overriding (runtime).</div>
+      <h4>Two Types of Polymorphism</h4>
+      <pre><code><span class="cm">// 1. COMPILE-TIME (Method Overloading) — resolved at compile time</span>
+<span class="kw">class</span> <span class="cl">Calculator</span> {
+    <span class="kw">int</span>    add(<span class="kw">int</span> a, <span class="kw">int</span> b)       { <span class="kw">return</span> a + b; }
+    <span class="kw">double</span> add(<span class="kw">double</span> a, <span class="kw">double</span> b) { <span class="kw">return</span> a + b; }
+    <span class="kw">int</span>    add(<span class="kw">int</span> a, <span class="kw">int</span> b, <span class="kw">int</span> c){ <span class="kw">return</span> a + b + c; }
+}
+
+<span class="cm">// 2. RUNTIME (Method Overriding) — resolved at runtime</span>
+<span class="kw">class</span> <span class="cl">Animal</span> {
+    <span class="kw">void</span> sound() { <span class="cl">System</span>.out.println(<span class="str">"Generic sound"</span>); }
+}
+<span class="kw">class</span> <span class="cl">Dog</span> <span class="kw">extends</span> <span class="cl">Animal</span> {
+    <span class="kw">@Override</span>
+    <span class="kw">void</span> sound() { <span class="cl">System</span>.out.println(<span class="str">"Woof!"</span>); }
+}
+<span class="cl">Animal</span> a = <span class="kw">new</span> <span class="cl">Dog</span>(); <span class="cm">// reference type = Animal, actual type = Dog</span>
+a.sound(); <span class="cm">// prints "Woof!" — runtime polymorphism</span></code></pre>
+      <h4>Compile-time vs Runtime Polymorphism</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Aspect</th><th>Compile-time (Overloading)</th><th>Runtime (Overriding)</th></tr>
+          <tr><td>Also called</td><td>Static polymorphism</td><td>Dynamic polymorphism</td></tr>
+          <tr><td>Resolved when?</td><td>At compile time</td><td>At runtime</td></tr>
+          <tr><td>Requires</td><td>Same class, different params</td><td>Inheritance / @Override</td></tr>
+          <tr><td>Performance</td><td>Faster</td><td>Slight overhead (vtable lookup)</td></tr>
+        </table>
+      </div>
+      <div class="tip">Polymorphism is the key to writing flexible, extensible code. A classic example is writing a method that accepts Animal type but works for Dog, Cat, Bird, etc.</div>
+    </div>
+  </details>
+
+  <!-- Q9 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 09</span>
+      <span class="q-title">What is Abstraction?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Abstraction hides complex internal details and exposes only the essential features. Achieved through abstract classes and interfaces.</div>
+      <h4>Real-World Analogy</h4>
+      <p>When you drive a car, you use the steering wheel and pedals. You don't need to know how the engine, fuel injection, or transmission work internally. That internal complexity is <strong>abstracted away</strong>.</p>
+      <pre><code><span class="cm">// Abstract class: partial abstraction</span>
+<span class="kw">abstract class</span> <span class="cl">Shape</span> {
+    <span class="kw">abstract double</span> area();    <span class="cm">// subclass MUST implement</span>
+    <span class="kw">void</span> display() { <span class="cl">System</span>.out.println(<span class="str">"Area: "</span> + area()); }
+}
+
+<span class="kw">class</span> <span class="cl">Circle</span> <span class="kw">extends</span> <span class="cl">Shape</span> {
+    <span class="kw">double</span> radius;
+    <span class="cl">Circle</span>(<span class="kw">double</span> r) { this.radius = r; }
+    <span class="kw">@Override</span>
+    <span class="kw">double</span> area() { <span class="kw">return</span> <span class="cl">Math</span>.PI * radius * radius; }
+}
+
+<span class="cm">// Interface: full abstraction (contract)</span>
+<span class="kw">interface</span> <span class="cl">Printable</span> {
+    <span class="kw">void</span> print();  <span class="cm">// all implementing classes must define this</span>
+}</code></pre>
+      <h4>Abstract Class vs Interface</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Abstract Class</th><th>Interface</th></tr>
+          <tr><td>Methods</td><td>Abstract + concrete</td><td>Abstract (+ default/static since Java 8)</td></tr>
+          <tr><td>Variables</td><td>Any type</td><td>public static final only</td></tr>
+          <tr><td>Constructor</td><td>✅ Yes</td><td>❌ No</td></tr>
+          <tr><td>Multiple inheritance</td><td>❌ No</td><td>✅ Yes (implement many)</td></tr>
+          <tr><td>Use when</td><td>Shared base behaviour</td><td>Defining a contract</td></tr>
+        </table>
+      </div>
+      <div class="tip">Use abstract classes when you have shared code. Use interfaces when you want to define a contract that many unrelated classes can follow.</div>
+    </div>
+  </details>
+
+  <!-- Q10 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 10</span>
+      <span class="q-title">What is Encapsulation?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Encapsulation wraps data (fields) and behavior (methods) together in a class, and hides internal state using private access + public getters/setters.</div>
+      <h4>Why Encapsulate?</h4>
+      <ul>
+        <li><strong>Data Protection</strong> — External code can't accidentally corrupt your object's state</li>
+        <li><strong>Validation</strong> — You can validate data inside setters before accepting it</li>
+        <li><strong>Flexibility</strong> — You can change internal implementation without breaking external code</li>
+        <li><strong>Maintainability</strong> — Bugs are easier to find when data changes happen in one place</li>
+      </ul>
+      <pre><code><span class="kw">public class</span> <span class="cl">BankAccount</span> {
+    <span class="kw">private double</span> balance;   <span class="cm">// hidden from outside</span>
+
+    <span class="kw">public double</span> getBalance() {
+        <span class="kw">return</span> balance;
+    }
+
+    <span class="kw">public void</span> deposit(<span class="kw">double</span> amount) {
+        <span class="kw">if</span> (amount > <span class="num">0</span>) {          <span class="cm">// validation in setter</span>
+            balance += amount;
+        }
+    }
+
+    <span class="kw">public void</span> withdraw(<span class="kw">double</span> amount) {
+        <span class="kw">if</span> (amount > <span class="num">0</span> &amp;&amp; amount &lt;= balance) {
+            balance -= amount;
+        } <span class="kw">else</span> {
+            <span class="kw">throw new</span> <span class="cl">IllegalArgumentException</span>(<span class="str">"Invalid amount"</span>);
+        }
+    }
+}</code></pre>
+      <div class="tip">A well-encapsulated class is like a vending machine — you put in a request, get the result, but have no access to the internal mechanism.</div>
+    </div>
+  </details>
+
+  <!-- Q11 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 11</span>
+      <span class="q-title">What is the difference between Method Overloading and Method Overriding?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Overloading = same method name, different parameters, in same class (compile-time). Overriding = same method signature, in child class (runtime).</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Overloading</th><th>Overriding</th></tr>
+          <tr><td>Class</td><td>Same class</td><td>Parent &amp; child class</td></tr>
+          <tr><td>Method signature</td><td>Same name, different params</td><td>Exactly the same</td></tr>
+          <tr><td>Return type</td><td>Can be different</td><td>Same or covariant</td></tr>
+          <tr><td>Access modifier</td><td>Any</td><td>Cannot reduce visibility</td></tr>
+          <tr><td>Polymorphism type</td><td>Compile-time (static)</td><td>Runtime (dynamic)</td></tr>
+          <tr><td>Annotation</td><td>None needed</td><td>@Override recommended</td></tr>
+          <tr><td>static methods</td><td>Can be overloaded</td><td>Cannot be overridden</td></tr>
+        </table>
+      </div>
+      <div class="tip">Always use @Override annotation when overriding. It lets the compiler catch mistakes if the signature doesn't match the parent method.</div>
+    </div>
+  </details>
+
+  <!-- Q12 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 12</span>
+      <span class="q-title">What is a Constructor? What are its types?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>A constructor is a special method with the same name as the class and no return type, called automatically when an object is created to initialize its state.</div>
+      <h4>Three Types of Constructors</h4>
+      <pre><code><span class="kw">class</span> <span class="cl">Person</span> {
+    <span class="cl">String</span> name;
+    <span class="kw">int</span> age;
+
+    <span class="cm">// 1. Default Constructor (no parameters)</span>
+    <span class="cl">Person</span>() {
+        name = <span class="str">"Unknown"</span>;
+        age = <span class="num">0</span>;
+    }
+
+    <span class="cm">// 2. Parameterized Constructor</span>
+    <span class="cl">Person</span>(<span class="cl">String</span> name, <span class="kw">int</span> age) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.age = age;
+    }
+
+    <span class="cm">// 3. Copy Constructor</span>
+    <span class="cl">Person</span>(<span class="cl">Person</span> other) {
+        <span class="kw">this</span>.name = other.name;
+        <span class="kw">this</span>.age  = other.age;
+    }
+}</code></pre>
+      <h4>Important Rules</h4>
+      <ul>
+        <li>Same name as the class, no return type (not even void)</li>
+        <li>If you don't define one, Java provides a free <strong>default constructor</strong></li>
+        <li>If you define a parameterized constructor, Java no longer provides the default — you must write it yourself if needed</li>
+        <li>Constructors can be overloaded but cannot be overridden</li>
+        <li>Use <code>this()</code> to call another constructor in the same class (constructor chaining)</li>
+      </ul>
+      <div class="tip">Constructor chaining with this() must be the FIRST statement in the constructor body.</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 3: KEYWORDS                    -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="keywords" class="section-header">
+    <div class="section-icon" style="background:rgba(255,166,87,0.1)">🔑</div>
+    <div class="section-title-wrap">
+      <h2>Java Keywords</h2>
+      <p>this, super, static, final and their real-world usage</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q13 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 13</span>
+      <span class="q-title">What is the this keyword in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>'this' refers to the current object instance. Used to resolve name conflicts between instance variables and parameters, call other constructors, and pass the current object.</div>
+      <h4>4 Uses of this</h4>
+      <pre><code><span class="kw">class</span> <span class="cl">Person</span> {
+    <span class="kw">private</span> <span class="cl">String</span> name;
+    <span class="kw">private</span> <span class="kw">int</span> age;
+
+    <span class="cm">// USE 1: Differentiate instance var from parameter</span>
+    <span class="cl">Person</span>(<span class="cl">String</span> name, <span class="kw">int</span> age) {
+        <span class="kw">this</span>.name = name;  <span class="cm">// this.name = instance variable</span>
+        <span class="kw">this</span>.age  = age;
+    }
+
+    <span class="cm">// USE 2: Constructor chaining — call another constructor</span>
+    <span class="cl">Person</span>(<span class="cl">String</span> name) {
+        <span class="kw">this</span>(name, <span class="num">0</span>);  <span class="cm">// calls Person(String, int)</span>
+    }
+
+    <span class="cm">// USE 3: Pass current object to another method</span>
+    <span class="kw">void</span> register() {
+        <span class="cl">Registry</span>.add(<span class="kw">this</span>);  <span class="cm">// passes this Person object</span>
+    }
+
+    <span class="cm">// USE 4: Return current object (method chaining / builder pattern)</span>
+    <span class="cl">Person</span> setName(<span class="cl">String</span> name) {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">return this</span>;  <span class="cm">// enables chaining: person.setName("X").setAge(20)</span>
+    }
+}</code></pre>
+      <div class="tip">The 'return this' pattern is the foundation of the Builder Pattern and fluent APIs — very common in interview discussions!</div>
+    </div>
+  </details>
+
+  <!-- Q14 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 14</span>
+      <span class="q-title">What is the super keyword in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>'super' refers to the parent class. Used to call the parent constructor, access overridden parent methods, and access hidden parent fields.</div>
+      <pre><code><span class="kw">class</span> <span class="cl">Animal</span> {
+    <span class="cl">String</span> type = <span class="str">"Animal"</span>;
+    <span class="kw">void</span> sound() { <span class="cl">System</span>.out.println(<span class="str">"Generic sound"</span>); }
+}
+
+<span class="kw">class</span> <span class="cl">Dog</span> <span class="kw">extends</span> <span class="cl">Animal</span> {
+    <span class="cl">String</span> type = <span class="str">"Dog"</span>;  <span class="cm">// hides parent field</span>
+
+    <span class="cl">Dog</span>() {
+        <span class="kw">super</span>();  <span class="cm">// MUST be first — calls Animal() constructor</span>
+    }
+
+    <span class="kw">@Override</span>
+    <span class="kw">void</span> sound() {
+        <span class="kw">super</span>.sound();  <span class="cm">// calls Animal's sound() first</span>
+        <span class="cl">System</span>.out.println(<span class="str">"Woof!"</span>);
+    }
+
+    <span class="kw">void</span> printTypes() {
+        <span class="cl">System</span>.out.println(<span class="kw">super</span>.type);  <span class="cm">// "Animal"</span>
+        <span class="cl">System</span>.out.println(<span class="kw">this</span>.type);   <span class="cm">// "Dog"</span>
+    }
+}</code></pre>
+      <div class="tip">super() must be the FIRST statement in a constructor. If you don't write it, Java inserts super() automatically (calling the parent's no-arg constructor).</div>
+    </div>
+  </details>
+
+  <!-- Q15 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 15</span>
+      <span class="q-title">What is the static keyword? What can be static in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>static members belong to the class itself, not to any specific object instance. They are shared across all objects and can be accessed without creating an object.</div>
+      <h4>What Can Be Static?</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Static Thing</th><th>Description</th><th>Example Use Case</th></tr>
+          <tr><td><strong>Static variable</strong></td><td>Shared across all instances</td><td>Counter of objects created</td></tr>
+          <tr><td><strong>Static method</strong></td><td>Called on class, not object</td><td>Math.max(), Collections.sort()</td></tr>
+          <tr><td><strong>Static block</strong></td><td>Runs once when class loads</td><td>Loading config, registering drivers</td></tr>
+          <tr><td><strong>Static nested class</strong></td><td>Nested class without outer reference</td><td>Builder pattern helper classes</td></tr>
+        </table>
+      </div>
+      <pre><code><span class="kw">class</span> <span class="cl">Counter</span> {
+    <span class="kw">static int</span> count = <span class="num">0</span>;    <span class="cm">// shared across all Counter objects</span>
+
+    <span class="kw">static</span> {
+        <span class="cl">System</span>.out.println(<span class="str">"Class loaded!"</span>);  <span class="cm">// static block</span>
+    }
+
+    <span class="cl">Counter</span>() { count++; }  <span class="cm">// increments on each new object</span>
+
+    <span class="kw">static void</span> showCount() {
+        <span class="cl">System</span>.out.println(<span class="str">"Total: "</span> + count);
+    }
+}
+<span class="cm">// No object needed:</span>
+<span class="cl">Counter</span>.showCount();  <span class="cm">// "Total: 0"</span></code></pre>
+      <h4>Important Restrictions</h4>
+      <ul>
+        <li>Static methods <strong>cannot</strong> access instance (non-static) variables or methods</li>
+        <li>Static methods <strong>cannot</strong> use <code>this</code> or <code>super</code> keywords</li>
+        <li>Static variables are stored in <strong>Metaspace</strong> (not heap)</li>
+      </ul>
+      <div class="tip">Avoid overusing static — it makes testing harder and couples code. Use it for true utility methods (like Math class) or constants.</div>
+    </div>
+  </details>
+
+  <!-- Q16 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 16</span>
+      <span class="q-title">What is the final keyword in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>final prevents modification: final variable = constant, final method = cannot be overridden, final class = cannot be subclassed.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Applied To</th><th>Effect</th><th>Example</th></tr>
+          <tr><td><strong>Variable</strong></td><td>Value cannot change (constant)</td><td>final int MAX = 100;</td></tr>
+          <tr><td><strong>Method</strong></td><td>Cannot be overridden in subclass</td><td>public final void lock()</td></tr>
+          <tr><td><strong>Class</strong></td><td>Cannot be extended/subclassed</td><td>public final class String</td></tr>
+        </table>
+      </div>
+      <pre><code><span class="cm">// final variable: value locked after assignment</span>
+<span class="kw">final int</span> MAX_SIZE = <span class="num">100</span>;
+<span class="cm">// MAX_SIZE = 200; → Compile ERROR</span>
+
+<span class="cm">// final reference: reference locked, but object content can change!</span>
+<span class="kw">final</span> <span class="cl">List</span>&lt;<span class="cl">String</span>&gt; list = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();
+list.add(<span class="str">"Java"</span>);  <span class="cm">// ✅ OK — modifying content</span>
+<span class="cm">// list = new ArrayList&lt;&gt;(); → Compile ERROR — can't change reference</span></code></pre>
+      <div class="tip">A common interview trap: a final reference variable can't be reassigned, but the object it points to can still be mutated. True immutability requires more than just final!</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 4: STRINGS                     -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="strings" class="section-header">
+    <div class="section-icon" style="background:rgba(247,129,102,0.1)">📝</div>
+    <div class="section-title-wrap">
+      <h2>Strings in Java</h2>
+      <p>Immutability, String pool, and the three String classes</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q17 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 17</span>
+      <span class="q-title">Why is String immutable in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>String is immutable because once created, its value cannot be changed — any "modification" creates a new String object. This enables security, thread safety, and String pool optimization.</div>
+      <h4>Proof of Immutability</h4>
+      <pre><code><span class="cl">String</span> s1 = <span class="str">"Hello"</span>;
+<span class="cl">String</span> s2 = s1;        <span class="cm">// s2 points to same object</span>
+s1 = s1 + <span class="str">" World"</span>;   <span class="cm">// creates NEW object "Hello World"
+
+System</span>.out.println(s1);  <span class="cm">// "Hello World" (new object)</span>
+<span class="cl">System</span>.out.println(s2);  <span class="cm">// "Hello"       (original unchanged)</span></code></pre>
+      <h4>4 Reasons Java Made String Immutable</h4>
+      <ul>
+        <li><strong>Security</strong> — File paths, DB URLs, passwords are Strings. Immutability prevents malicious code from changing them after validation.</li>
+        <li><strong>String Pool</strong> — Multiple references can safely share the same String object in the pool, saving memory.</li>
+        <li><strong>Thread Safety</strong> — Immutable objects can be shared between threads without synchronization.</li>
+        <li><strong>Hashcode Caching</strong> — String's hashcode is cached after first computation. Since value can't change, the cached hash is always valid (crucial for use as HashMap keys).</li>
+      </ul>
+      <div class="tip">String pool: String a = "Java"; String b = "Java"; — both point to the same object! But new String("Java") always creates a new heap object.</div>
+    </div>
+  </details>
+
+  <!-- Q18 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 18</span>
+      <span class="q-title">What is the difference between String, StringBuffer, and StringBuilder?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>String is immutable. StringBuffer is mutable and thread-safe (synchronized). StringBuilder is mutable, not thread-safe, but fastest.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>String</th><th>StringBuffer</th><th>StringBuilder</th></tr>
+          <tr><td>Mutable?</td><td>❌ Immutable</td><td>✅ Mutable</td><td>✅ Mutable</td></tr>
+          <tr><td>Thread-safe?</td><td>✅ Yes</td><td>✅ Yes (synchronized)</td><td>❌ No</td></tr>
+          <tr><td>Performance</td><td>Slow for concat</td><td>Moderate</td><td>Fastest</td></tr>
+          <tr><td>When to use</td><td>Constants, short strings</td><td>Multi-threaded string building</td><td>Single-threaded string building</td></tr>
+          <tr><td>Memory</td><td>Creates new objects</td><td>Modifies existing buffer</td><td>Modifies existing buffer</td></tr>
+        </table>
+      </div>
+      <pre><code><span class="cm">// String — creates new object every time</span>
+<span class="cl">String</span> s = <span class="str">""</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; <span class="num">1000</span>; i++) s += i;  <span class="cm">// 1000 new String objects! 🐢</span>
+
+<span class="cm">// StringBuilder — best for single-threaded</span>
+<span class="cl">StringBuilder</span> sb = <span class="kw">new</span> <span class="cl">StringBuilder</span>();
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; <span class="num">1000</span>; i++) sb.append(i);  <span class="cm">// one object 🚀</span>
+<span class="cl">String</span> result = sb.toString();</code></pre>
+      <div class="tip">StringBuilder is 10-100x faster than String concatenation in loops. Always use StringBuilder in performance-critical code.</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 5: COLLECTIONS                 -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="collections" class="section-header">
+    <div class="section-icon" style="background:rgba(210,168,255,0.1)">📦</div>
+    <div class="section-title-wrap">
+      <h2>Java Collections</h2>
+      <p>List, Set, Map, and when to use each</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q19 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 19</span>
+      <span class="q-title">What is the difference between List, Set, and Map?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>List = ordered + duplicates allowed. Set = unique elements only. Map = key-value pairs with unique keys.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>List</th><th>Set</th><th>Map</th></tr>
+          <tr><td>Order</td><td>Insertion order maintained</td><td>Depends on impl</td><td>Depends on impl</td></tr>
+          <tr><td>Duplicates</td><td>✅ Allowed</td><td>❌ Not allowed</td><td>Keys unique, values can repeat</td></tr>
+          <tr><td>Access</td><td>By index: get(0)</td><td>No index access</td><td>By key: get("key")</td></tr>
+          <tr><td>Null</td><td>Multiple nulls OK</td><td>One null (HashSet)</td><td>One null key (HashMap)</td></tr>
+          <tr><td>Implementations</td><td>ArrayList, LinkedList</td><td>HashSet, TreeSet, LinkedHashSet</td><td>HashMap, TreeMap, LinkedHashMap</td></tr>
+          <tr><td>Use when</td><td>Ordered sequence of items</td><td>Unique values only</td><td>Key-based lookups</td></tr>
+        </table>
+      </div>
+      <div class="tip">Pick List when order matters. Pick Set when uniqueness matters. Pick Map when you need fast key-based lookup (like a dictionary or cache).</div>
+    </div>
+  </details>
+
+  <!-- Q20 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 20</span>
+      <span class="q-title">What is the difference between ArrayList and LinkedList?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>ArrayList uses a dynamic array — fast random access O(1). LinkedList uses doubly linked nodes — fast insertions/deletions O(1) at ends.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>ArrayList</th><th>LinkedList</th></tr>
+          <tr><td>Internal structure</td><td>Dynamic array</td><td>Doubly linked list</td></tr>
+          <tr><td>Random access</td><td>O(1) — very fast</td><td>O(n) — slow</td></tr>
+          <tr><td>Insert/Delete (middle)</td><td>O(n) — shifts elements</td><td>O(n) to find, O(1) to remove</td></tr>
+          <tr><td>Insert/Delete (ends)</td><td>O(1) amortized</td><td>O(1) — very fast</td></tr>
+          <tr><td>Memory</td><td>Less — stores only data</td><td>More — prev/next pointers</td></tr>
+          <tr><td>Cache performance</td><td>Better (contiguous memory)</td><td>Poorer (scattered nodes)</td></tr>
+          <tr><td>Best for</td><td>Read-heavy, get by index</td><td>Frequent add/remove at ends</td></tr>
+        </table>
+      </div>
+      <div class="tip">In practice, ArrayList is preferred 90% of the time. LinkedList is useful as a Queue/Deque, but ArrayDeque is even better for that.</div>
+    </div>
+  </details>
+
+  <!-- Q21 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 21</span>
+      <span class="q-title">What is the difference between HashMap and HashTable?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>HashMap is not synchronized, allows null, and is faster. Hashtable is synchronized (thread-safe), doesn't allow null, and is a legacy class.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>HashMap</th><th>Hashtable</th></tr>
+          <tr><td>Thread-safe?</td><td>❌ No (use ConcurrentHashMap)</td><td>✅ Yes (synchronized)</td></tr>
+          <tr><td>Null keys</td><td>✅ One null key allowed</td><td>❌ NullPointerException</td></tr>
+          <tr><td>Null values</td><td>✅ Multiple null values</td><td>❌ Not allowed</td></tr>
+          <tr><td>Performance</td><td>Faster</td><td>Slower (synchronization overhead)</td></tr>
+          <tr><td>Introduced in</td><td>Java 1.2 (Collections)</td><td>Java 1.0 (legacy)</td></tr>
+          <tr><td>Iterator</td><td>Fail-fast iterator</td><td>Enumerator (not fail-fast)</td></tr>
+        </table>
+      </div>
+      <div class="tip">Never use Hashtable in new code. Use HashMap for single-threaded scenarios and ConcurrentHashMap for multi-threaded environments.</div>
+    </div>
+  </details>
+
+  <!-- Q22 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 22</span>
+      <span class="q-title">What is the difference between HashMap and HashSet?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>HashMap stores key-value pairs. HashSet stores only unique values — and internally it IS a HashMap where your element is the key and a dummy object is the value.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>HashMap</th><th>HashSet</th></tr>
+          <tr><td>Stores</td><td>Key-value pairs</td><td>Unique elements only</td></tr>
+          <tr><td>Duplicates</td><td>Duplicate keys replace old value</td><td>Duplicates ignored</td></tr>
+          <tr><td>Access</td><td>map.get(key)</td><td>set.contains(element)</td></tr>
+          <tr><td>Null</td><td>1 null key, many null values</td><td>1 null element</td></tr>
+          <tr><td>Internally uses</td><td>Hash table</td><td>HashMap (element = key, dummy = value)</td></tr>
+        </table>
+      </div>
+      <div class="tip">The HashSet "trick" is a great answer to impress interviewers — HashSet literally wraps a HashMap internally. When you add "Hello" to a HashSet, it calls map.put("Hello", DUMMY_OBJECT) internally.</div>
+    </div>
+  </details>
+
+  <!-- Q23 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 23</span>
+      <span class="q-title">What is the difference between HashSet and TreeSet?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>HashSet is unordered with O(1) operations using hashing. TreeSet is always sorted with O(log n) operations using a Red-Black Tree.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>HashSet</th><th>TreeSet</th></tr>
+          <tr><td>Order</td><td>No guaranteed order</td><td>Sorted (natural or custom)</td></tr>
+          <tr><td>Data structure</td><td>Hash table</td><td>Red-Black Tree</td></tr>
+          <tr><td>Performance</td><td>O(1) add/remove/contains</td><td>O(log n) all operations</td></tr>
+          <tr><td>Null element</td><td>✅ One allowed</td><td>❌ Not allowed (for comparisons)</td></tr>
+          <tr><td>Use when</td><td>Fast lookup, order unimportant</td><td>Sorted unique data needed</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q24 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 24</span>
+      <span class="q-title">What is the difference between Comparable and Comparator?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Comparable defines the natural/default sort order inside the class (compareTo). Comparator defines custom sort logic outside the class (compare) — allowing multiple sort strategies.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Comparable</th><th>Comparator</th></tr>
+          <tr><td>Package</td><td>java.lang</td><td>java.util</td></tr>
+          <tr><td>Method</td><td>compareTo(T obj)</td><td>compare(T o1, T o2)</td></tr>
+          <tr><td>Location</td><td>Inside the class</td><td>Separate class or lambda</td></tr>
+          <tr><td>Sort types</td><td>One (natural order)</td><td>Multiple custom orders</td></tr>
+          <tr><td>Modifies class?</td><td>Yes (class implements it)</td><td>No (external)</td></tr>
+        </table>
+      </div>
+      <pre><code><span class="cm">// Comparable — sort by age naturally</span>
+<span class="kw">class</span> <span class="cl">Student</span> <span class="kw">implements</span> <span class="cl">Comparable</span>&lt;<span class="cl">Student</span>&gt; {
+    <span class="kw">int</span> age; <span class="cl">String</span> name;
+    <span class="kw">public int</span> compareTo(<span class="cl">Student</span> other) { <span class="kw">return</span> <span class="kw">this</span>.age - other.age; }
+}
+
+<span class="cm">// Comparator — sort by name (external)</span>
+<span class="cl">Collections</span>.sort(students, (<span class="cl">Comparator</span>.comparing(<span class="cl">Student</span>::getName)));
+<span class="cl">Collections</span>.sort(students, (<span class="cl">Comparator</span>.comparingInt(s -> s.age)));</code></pre>
+      <div class="tip">Use Comparable for natural ordering (String sorts alphabetically, Integer sorts numerically). Use Comparator when you need custom or multiple sort strategies.</div>
+    </div>
+  </details>
+
+  <!-- Q25 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 25</span>
+      <span class="q-title">What is Optional in Java? Why use it?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Optional is a container introduced in Java 8 that may or may not hold a value — it's a better way to handle null, preventing NullPointerExceptions by making null handling explicit.</div>
+      <pre><code><span class="cm">// Without Optional — NPE risk</span>
+<span class="cl">String</span> name = getUserName(id);  <span class="cm">// might be null!</span>
+<span class="kw">int</span> len = name.length();       <span class="cm">// BOOM — NullPointerException</span>
+
+<span class="cm">// With Optional — safe, explicit</span>
+<span class="cl">Optional</span>&lt;<span class="cl">String</span>&gt; name = <span class="cl">Optional</span>.ofNullable(getUserName(id));
+
+<span class="cm">// Method 1: orElse — return default if empty</span>
+<span class="cl">String</span> display = name.orElse(<span class="str">"Anonymous"</span>);
+
+<span class="cm">// Method 2: ifPresent — run only if value exists</span>
+name.ifPresent(n -> <span class="cl">System</span>.out.println(n.toUpperCase()));
+
+<span class="cm">// Method 3: map — transform the value</span>
+<span class="cl">Optional</span>&lt;<span class="cl">String</span>&gt; upper = name.map(<span class="cl">String</span>::toUpperCase);
+
+<span class="cm">// Method 4: orElseThrow — throw exception if empty</span>
+<span class="cl">String</span> required = name.orElseThrow(() -> <span class="kw">new</span> <span class="cl">RuntimeException</span>(<span class="str">"Name required"</span>));</code></pre>
+      <h4>Creating Optional</h4>
+      <ul>
+        <li><code>Optional.of(value)</code> — throws NPE if value is null</li>
+        <li><code>Optional.ofNullable(value)</code> — safe, handles null</li>
+        <li><code>Optional.empty()</code> — explicitly empty container</li>
+      </ul>
+      <div class="tip">Don't use Optional as method parameters or class fields — only as return types. It's designed to signal "this method might not return a value."</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 6: JAVA ADVANCED               -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="advanced" class="section-header">
+    <div class="section-icon" style="background:rgba(121,192,255,0.1)">⚙️</div>
+    <div class="section-title-wrap">
+      <h2>Java Advanced Concepts</h2>
+      <p>JVM internals, memory, GC, and Java 8+ features</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q26 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 26</span>
+      <span class="q-title">How does Java work internally? (Compilation to Execution)</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Java source code (.java) is compiled to bytecode (.class) by javac, then the JVM loads, verifies, and executes it — using the JIT compiler to convert hot code to native machine code.</div>
+      <h4>Step-by-Step Execution Flow</h4>
+      <ul>
+        <li><strong>Step 1 — Write:</strong> Developer writes <code>Hello.java</code></li>
+        <li><strong>Step 2 — Compile:</strong> <code>javac Hello.java</code> → produces <code>Hello.class</code> (bytecode)</li>
+        <li><strong>Step 3 — ClassLoader:</strong> JVM's ClassLoader loads the .class file into memory</li>
+        <li><strong>Step 4 — Bytecode Verifier:</strong> Checks bytecode for security violations and type safety</li>
+        <li><strong>Step 5 — Interpreter:</strong> JVM interprets bytecode line-by-line (slower start)</li>
+        <li><strong>Step 6 — JIT Compiler:</strong> Frequently-called methods ("hot" code) are compiled to native machine code — making them run fast</li>
+        <li><strong>Step 7 — Execution:</strong> Program runs with GC managing memory automatically</li>
+      </ul>
+      <div class="tip">Bytecode is the secret to WORA. It's not machine code (CPU-specific), it's JVM code — any JVM on any OS can run it.</div>
+    </div>
+  </details>
+
+  <!-- Q27 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 27</span>
+      <span class="q-title">What are the memory areas in JVM?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>JVM has Heap (objects, GC-managed), Stack (method calls + local vars, per-thread), Metaspace (class metadata), PC Register, and Native Method Stack.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Memory Area</th><th>Stores</th><th>Managed By</th><th>Per Thread?</th></tr>
+          <tr><td><strong>Heap</strong></td><td>Objects, instance variables</td><td>Garbage Collector</td><td>❌ Shared</td></tr>
+          <tr><td><strong>Stack</strong></td><td>Method frames, local vars, references</td><td>Auto (LIFO)</td><td>✅ Yes</td></tr>
+          <tr><td><strong>Metaspace</strong></td><td>Class metadata, method info, static vars</td><td>GC (native)</td><td>❌ Shared</td></tr>
+          <tr><td><strong>PC Register</strong></td><td>Address of current JVM instruction</td><td>Auto</td><td>✅ Yes</td></tr>
+          <tr><td><strong>Native Method Stack</strong></td><td>Native (C/C++) method calls via JNI</td><td>OS</td><td>✅ Yes</td></tr>
+        </table>
+      </div>
+      <h4>Common Memory Errors</h4>
+      <ul>
+        <li><strong>OutOfMemoryError:</strong> Heap is full — too many objects alive (fix: tune heap size, fix memory leaks)</li>
+        <li><strong>StackOverflowError:</strong> Stack is full — usually from infinite recursion</li>
+      </ul>
+      <div class="tip">Metaspace replaced PermGen in Java 8. PermGen had fixed size and caused OutOfMemoryError. Metaspace uses native memory and grows dynamically.</div>
+    </div>
+  </details>
+
+  <!-- Q28 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 28</span>
+      <span class="q-title">What is Garbage Collection? How does it work?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>GC automatically reclaims heap memory from objects that are no longer reachable/referenced — freeing developers from manual memory management.</div>
+      <h4>How Objects Become Garbage</h4>
+      <pre><code><span class="kw">void</span> method() {
+    <span class="cl">String</span> s = <span class="kw">new</span> <span class="cl">String</span>(<span class="str">"Hello"</span>);  <span class="cm">// object created on heap</span>
+    s = <span class="kw">null</span>;                      <span class="cm">// no references → eligible for GC</span>
+}                                  <span class="cm">// when method returns, s goes out of scope</span></code></pre>
+      <h4>GC Types</h4>
+      <ul>
+        <li><strong>Minor GC</strong> — Cleans the Young Generation (Eden + Survivor spaces). Fast and frequent.</li>
+        <li><strong>Major GC</strong> — Cleans the Old Generation. Slower.</li>
+        <li><strong>Full GC</strong> — Cleans entire heap. Expensive — causes "stop-the-world" pause.</li>
+      </ul>
+      <h4>GC Algorithms</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Algorithm</th><th>When to Use</th><th>Key Feature</th></tr>
+          <tr><td>Serial GC</td><td>Small apps, single CPU</td><td>Single thread</td></tr>
+          <tr><td>Parallel GC</td><td>Batch processing</td><td>Multiple threads, high throughput</td></tr>
+          <tr><td>G1 GC</td><td>Most apps (Java 9+ default)</td><td>Predictable pause times</td></tr>
+          <tr><td>ZGC</td><td>Ultra-low latency apps</td><td>&lt;10ms pauses, multi-TB heaps</td></tr>
+          <tr><td>Shenandoah</td><td>Low-latency apps</td><td>Concurrent compaction</td></tr>
+        </table>
+      </div>
+      <div class="tip">Never call System.gc() manually — it's just a hint, not a guarantee. Trust the JVM to GC at the right time.</div>
+    </div>
+  </details>
+
+  <!-- Q29 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 29</span>
+      <span class="q-title">What are Java 8 features? <span class="new-badge">Must Know</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Java 8 introduced Lambda Expressions, Stream API, Functional Interfaces, Optional, Default Methods in interfaces, Method References, and the new Date/Time API.</div>
+      <h4>1. Lambda Expressions — Anonymous Functions</h4>
+      <pre><code><span class="cm">// Old way</span>
+<span class="cl">Runnable</span> r = <span class="kw">new</span> <span class="cl">Runnable</span>() {
+    <span class="kw">public void</span> run() { <span class="cl">System</span>.out.println(<span class="str">"Running"</span>); }
+};
+<span class="cm">// Java 8 Lambda</span>
+<span class="cl">Runnable</span> r = () -> <span class="cl">System</span>.out.println(<span class="str">"Running"</span>);</code></pre>
+      <h4>2. Stream API — Process Collections Functionally</h4>
+      <pre><code><span class="cl">List</span>&lt;<span class="cl">String</span>&gt; names = <span class="cl">Arrays</span>.asList(<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Charlie"</span>, <span class="str">"Anna"</span>);
+
+<span class="cl">List</span>&lt;<span class="cl">String</span>&gt; result = names.stream()
+    .filter(n -> n.startsWith(<span class="str">"A"</span>))      <span class="cm">// Alice, Anna</span>
+    .map(<span class="cl">String</span>::toUpperCase)             <span class="cm">// ALICE, ANNA</span>
+    .sorted()                              <span class="cm">// alphabetical</span>
+    .collect(<span class="cl">Collectors</span>.toList());        <span class="cm">// to List</span></code></pre>
+      <h4>3. Functional Interfaces</h4>
+      <ul>
+        <li><code>Predicate&lt;T&gt;</code> — takes T, returns boolean (for filtering)</li>
+        <li><code>Function&lt;T,R&gt;</code> — takes T, returns R (for mapping)</li>
+        <li><code>Consumer&lt;T&gt;</code> — takes T, returns nothing (for side effects)</li>
+        <li><code>Supplier&lt;T&gt;</code> — takes nothing, returns T (for lazy creation)</li>
+      </ul>
+      <h4>4. Default Methods in Interfaces</h4>
+      <pre><code><span class="kw">interface</span> <span class="cl">Vehicle</span> {
+    <span class="kw">void</span> start();
+    <span class="kw">default void</span> honk() {   <span class="cm">// default method — no need to implement</span>
+        <span class="cl">System</span>.out.println(<span class="str">"Beep!"</span>);
+    }
+}</code></pre>
+      <div class="tip">Java 8 is the most tested version in interviews. Know lambda, stream(), filter(), map(), collect(), Optional, and the 4 functional interfaces by heart.</div>
+    </div>
+  </details>
+
+  <!-- Q30 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 30</span>
+      <span class="q-title">What is try-with-resources?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Try-with-resources (Java 7+) automatically closes resources (files, connections, streams) when the try block finishes — even if an exception occurs — eliminating resource leaks.</div>
+      <pre><code><span class="cm">// OLD WAY — manual cleanup, error-prone</span>
+<span class="cl">FileReader</span> fr = <span class="kw">null</span>;
+<span class="kw">try</span> {
+    fr = <span class="kw">new</span> <span class="cl">FileReader</span>(<span class="str">"file.txt"</span>);
+    <span class="cm">// use fr...</span>
+} <span class="kw">catch</span> (<span class="cl">IOException</span> e) {
+    e.printStackTrace();
+} <span class="kw">finally</span> {
+    <span class="kw">if</span> (fr != <span class="kw">null</span>) fr.close();  <span class="cm">// what if close() also throws?</span>
+}
+
+<span class="cm">// NEW WAY — automatic, safe, clean</span>
+<span class="kw">try</span> (<span class="cl">FileReader</span> fr = <span class="kw">new</span> <span class="cl">FileReader</span>(<span class="str">"file.txt"</span>)) {
+    <span class="cm">// use fr...</span>
+}  <span class="cm">// fr.close() called automatically!</span></code></pre>
+      <p>Any class implementing <code>AutoCloseable</code> or <code>Closeable</code> can be used in try-with-resources.</p>
+      <div class="tip">Always use try-with-resources for files, database connections, sockets, and any I/O. It prevents resource leaks — a common source of production bugs.</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 7: EXCEPTION HANDLING          -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="exceptions" class="section-header">
+    <div class="section-icon" style="background:rgba(210,168,255,0.1)">⚠️</div>
+    <div class="section-title-wrap">
+      <h2>Exception Handling</h2>
+      <p>Checked, unchecked, try-catch-finally, and best practices</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q31 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 31</span>
+      <span class="q-title">What is Exception Handling in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Exception handling manages runtime errors gracefully using try-catch-finally. Checked exceptions must be handled at compile time; unchecked exceptions are optional to handle.</div>
+      <h4>Exception Hierarchy</h4>
+      <ul>
+        <li><strong>Throwable</strong> (root)
+          <ul>
+            <li><strong>Error</strong> — Serious JVM problems, don't catch: OutOfMemoryError, StackOverflowError</li>
+            <li><strong>Exception</strong>
+              <ul>
+                <li><strong>Checked</strong> — Must handle or declare: IOException, SQLException</li>
+                <li><strong>Unchecked (RuntimeException)</strong> — Optional: NullPointerException, ArrayIndexOutOfBoundsException</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <h4>Complete Example</h4>
+      <pre><code><span class="kw">public void</span> readFile(<span class="cl">String</span> path) <span class="kw">throws</span> <span class="cl">IOException</span> {
+    <span class="kw">try</span> (<span class="cl">BufferedReader</span> br = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(path))) {
+        <span class="cl">String</span> line;
+        <span class="kw">while</span> ((line = br.readLine()) != <span class="kw">null</span>) {
+            <span class="cl">System</span>.out.println(line);
+        }
+    } <span class="kw">catch</span> (<span class="cl">FileNotFoundException</span> e) {
+        <span class="cm">// Specific exception first (more specific → less specific)</span>
+        <span class="cl">System</span>.err.println(<span class="str">"File not found: "</span> + e.getMessage());
+    } <span class="kw">catch</span> (<span class="cl">IOException</span> e) {
+        <span class="cl">System</span>.err.println(<span class="str">"IO Error: "</span> + e.getMessage());
+    } <span class="kw">finally</span> {
+        <span class="cl">System</span>.out.println(<span class="str">"This ALWAYS runs"</span>);
+    }
+}
+
+<span class="cm">// Custom exception</span>
+<span class="kw">class</span> <span class="cl">InsufficientFundsException</span> <span class="kw">extends</span> <span class="cl">RuntimeException</span> {
+    <span class="cl">InsufficientFundsException</span>(<span class="cl">String</span> message) { <span class="kw">super</span>(message); }
+}</code></pre>
+      <h4>Keywords Summary</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Keyword</th><th>Purpose</th></tr>
+          <tr><td><strong>try</strong></td><td>Wraps code that might throw an exception</td></tr>
+          <tr><td><strong>catch</strong></td><td>Handles the exception</td></tr>
+          <tr><td><strong>finally</strong></td><td>Always executes — even if exception occurs or return is used</td></tr>
+          <tr><td><strong>throw</strong></td><td>Explicitly throw an exception: throw new IOException("error")</td></tr>
+          <tr><td><strong>throws</strong></td><td>Declares that a method might throw: void method() throws IOException</td></tr>
+        </table>
+      </div>
+      <div class="tip">Catch specific exceptions before general ones. finally always runs — use it for cleanup. Create custom exceptions for domain-specific errors.</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 8: MULTI-THREADING             -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="threads" class="section-header">
+    <div class="section-icon" style="background:rgba(86,211,100,0.1)">🔄</div>
+    <div class="section-title-wrap">
+      <h2>Multi-threading &amp; Concurrency</h2>
+      <p>Threads, synchronization, deadlocks, and thread pools</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q32 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 32</span>
+      <span class="q-title">What is Multi-threading in Java?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Multi-threading allows a program to run multiple threads concurrently, sharing the same process memory — enabling parallelism, better CPU utilization, and responsive applications.</div>
+      <h4>Key Concepts</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Term</th><th>Definition</th></tr>
+          <tr><td><strong>Process</strong></td><td>A running program with its own memory space</td></tr>
+          <tr><td><strong>Thread</strong></td><td>Smallest execution unit within a process — shares process memory</td></tr>
+          <tr><td><strong>Concurrency</strong></td><td>Multiple tasks making progress (possibly on 1 CPU via context switching)</td></tr>
+          <tr><td><strong>Parallelism</strong></td><td>Multiple tasks running simultaneously on multiple CPU cores</td></tr>
+        </table>
+      </div>
+      <h4>Thread Lifecycle States</h4>
+      <ul>
+        <li><strong>NEW</strong> — Thread created, not started yet</li>
+        <li><strong>RUNNABLE</strong> — Ready to run, waiting for CPU</li>
+        <li><strong>RUNNING</strong> — Actively executing on CPU</li>
+        <li><strong>BLOCKED/WAITING</strong> — Waiting for lock or event</li>
+        <li><strong>TERMINATED</strong> — Execution completed</li>
+      </ul>
+      <div class="tip">Real-world analogy: A restaurant kitchen is one process. Multiple chefs (threads) work concurrently — one grills, one chops, one plates — sharing the same kitchen resources.</div>
+    </div>
+  </details>
+
+  <!-- Q33 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 33</span>
+      <span class="q-title">How to create threads in Java? What are the ways?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Three ways: extend Thread class, implement Runnable interface, or use Lambda (Java 8+). For production, always use ExecutorService/thread pools.</div>
+      <pre><code><span class="cm">// WAY 1: Extend Thread class</span>
+<span class="kw">class</span> <span class="cl">MyThread</span> <span class="kw">extends</span> <span class="cl">Thread</span> {
+    <span class="kw">public void</span> run() { <span class="cl">System</span>.out.println(<span class="str">"Thread 1 running"</span>); }
+}
+<span class="kw">new</span> <span class="cl">MyThread</span>().start(); <span class="cm">// NEVER call run() directly!</span>
+
+<span class="cm">// WAY 2: Implement Runnable (RECOMMENDED — composition over inheritance)</span>
+<span class="kw">class</span> <span class="cl">MyTask</span> <span class="kw">implements</span> <span class="cl">Runnable</span> {
+    <span class="kw">public void</span> run() { <span class="cl">System</span>.out.println(<span class="str">"Runnable running"</span>); }
+}
+<span class="kw">new</span> <span class="cl">Thread</span>(<span class="kw">new</span> <span class="cl">MyTask</span>()).start();
+
+<span class="cm">// WAY 3: Lambda (Java 8+)</span>
+<span class="kw">new</span> <span class="cl">Thread</span>(() -> <span class="cl">System</span>.out.println(<span class="str">"Lambda thread"</span>)).start();
+
+<span class="cm">// WAY 4: ExecutorService (PRODUCTION BEST PRACTICE)</span>
+<span class="cl">ExecutorService</span> pool = <span class="cl">Executors</span>.newFixedThreadPool(<span class="num">4</span>);
+pool.submit(() -> <span class="cl">System</span>.out.println(<span class="str">"Pool thread"</span>));
+pool.shutdown();</code></pre>
+      <div class="tip">Prefer Runnable over extending Thread (you can still extend another class). Use ExecutorService in production — raw threads are unmanaged and wasteful.</div>
+    </div>
+  </details>
+
+  <!-- Q34 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 34</span>
+      <span class="q-title">What is the difference between Thread and Process?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Process = heavyweight, isolated memory space (like separate apps). Thread = lightweight, shares process memory — faster to create and communicate between.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Aspect</th><th>Thread</th><th>Process</th></tr>
+          <tr><td>Memory</td><td>Shared with other threads</td><td>Own separate memory space</td></tr>
+          <tr><td>Creation cost</td><td>Lightweight, fast</td><td>Heavyweight, slow</td></tr>
+          <tr><td>Communication</td><td>Easy (shared memory)</td><td>IPC needed (pipes, sockets, shared memory)</td></tr>
+          <tr><td>Crash impact</td><td>Can crash other threads</td><td>Isolated — won't affect others</td></tr>
+          <tr><td>Context switch</td><td>Fast</td><td>Slow</td></tr>
+          <tr><td>Real example</td><td>HTTP request handlers</td><td>Chrome browser tabs</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q35 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 35</span>
+      <span class="q-title">What is Synchronization? What are thread safety issues?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Synchronization ensures only one thread accesses a critical section at a time, preventing race conditions on shared mutable state.</div>
+      <pre><code><span class="cm">// PROBLEM: Race condition — count++ is NOT atomic!</span>
+<span class="kw">class</span> <span class="cl">Counter</span> {
+    <span class="kw">private int</span> count = <span class="num">0</span>;
+    <span class="kw">public void</span> increment() { count++; }  <span class="cm">// BUG: read-modify-write = 3 steps!</span>
+}
+
+<span class="cm">// SOLUTION 1: synchronized method</span>
+<span class="kw">public synchronized void</span> increment() { count++; }
+
+<span class="cm">// SOLUTION 2: synchronized block (more granular)</span>
+<span class="kw">public void</span> increment() {
+    <span class="kw">synchronized</span>(<span class="kw">this</span>) { count++; }
+}
+
+<span class="cm">// SOLUTION 3: AtomicInteger (best for simple counters)</span>
+<span class="kw">private</span> <span class="cl">AtomicInteger</span> count = <span class="kw">new</span> <span class="cl">AtomicInteger</span>(<span class="num">0</span>);
+<span class="kw">public void</span> increment() { count.incrementAndGet(); }</code></pre>
+      <h4>Thread Safety Issues</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Problem</th><th>Description</th><th>Solution</th></tr>
+          <tr><td><strong>Race Condition</strong></td><td>Multiple threads modify shared data — final value unpredictable</td><td>synchronized, AtomicInteger</td></tr>
+          <tr><td><strong>Deadlock</strong></td><td>Two threads wait for each other's lock — both frozen forever</td><td>Lock ordering, tryLock with timeout</td></tr>
+          <tr><td><strong>Starvation</strong></td><td>Thread never gets CPU/lock time</td><td>Fair locks, thread priority tuning</td></tr>
+          <tr><td><strong>Livelock</strong></td><td>Threads active but constantly reacting to each other, no progress</td><td>Introduce randomness in retry</td></tr>
+        </table>
+      </div>
+      <div class="tip">Use AtomicInteger/AtomicLong for simple counters. For complex scenarios, prefer java.util.concurrent (ReentrantLock, CopyOnWriteArrayList, ConcurrentHashMap) over raw synchronized.</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 9: SPRING FRAMEWORK            -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="spring" class="section-header">
+    <div class="section-icon" style="background:rgba(255,166,87,0.1)">🌿</div>
+    <div class="section-title-wrap">
+      <h2>Spring Framework</h2>
+      <p>Spring Boot, REST, dependency injection, and WebClient</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q36 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 36</span>
+      <span class="q-title">What is the difference between RestTemplate and WebClient?</span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>RestTemplate is the classic blocking HTTP client (deprecated). WebClient is the modern non-blocking reactive HTTP client — supports both sync and async calls.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>RestTemplate</th><th>WebClient</th></tr>
+          <tr><td>Introduced in</td><td>Spring 3</td><td>Spring 5 (WebFlux)</td></tr>
+          <tr><td>Blocking?</td><td>✅ Blocking (synchronous)</td><td>❌ Non-blocking (reactive)</td></tr>
+          <tr><td>Async support</td><td>Limited</td><td>✅ Full async/reactive</td></tr>
+          <tr><td>Status (Spring 6)</td><td>Deprecated</td><td>Recommended</td></tr>
+          <tr><td>Return type</td><td>Direct objects</td><td>Mono&lt;T&gt; / Flux&lt;T&gt;</td></tr>
+          <tr><td>Thread model</td><td>One thread per request</td><td>Event loop — fewer threads</td></tr>
+        </table>
+      </div>
+      <pre><code><span class="cm">// RestTemplate (old way)</span>
+<span class="cl">RestTemplate</span> rt = <span class="kw">new</span> <span class="cl">RestTemplate</span>();
+<span class="cl">User</span> user = rt.getForObject(<span class="str">"http://api/users/1"</span>, <span class="cl">User</span>.<span class="kw">class</span>);
+
+<span class="cm">// WebClient (new way)</span>
+<span class="cl">WebClient</span> client = <span class="cl">WebClient</span>.create(<span class="str">"http://api"</span>);
+<span class="cl">Mono</span>&lt;<span class="cl">User</span>&gt; user = client.get()
+    .uri(<span class="str">"/users/1"</span>)
+    .retrieve()
+    .bodyToMono(<span class="cl">User</span>.<span class="kw">class</span>);</code></pre>
+      <div class="tip">Migrate to WebClient for new projects. For Spring MVC (non-reactive) you can still use WebClient in blocking mode with .block() — but that defeats the purpose.</div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 10: BONUS Q&A                  -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="extra" class="section-header">
+    <div class="section-icon" style="background:rgba(247,129,102,0.1)">🎯</div>
+    <div class="section-title-wrap">
+      <h2>Bonus Questions &amp; Extra Topics</h2>
+      <p>Additional questions that frequently appear in interviews</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q37 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 37</span>
+      <span class="q-title">What is the difference between interface and abstract class? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Abstract class can have method implementations + state + constructor. Interface defines a pure contract — only abstract methods (+ default/static since Java 8), no constructor.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Abstract Class</th><th>Interface</th></tr>
+          <tr><td>Methods</td><td>Abstract + concrete methods</td><td>Abstract + default + static (Java 8+)</td></tr>
+          <tr><td>Variables</td><td>Any — instance variables allowed</td><td>Only public static final constants</td></tr>
+          <tr><td>Constructor</td><td>✅ Yes</td><td>❌ No</td></tr>
+          <tr><td>Multiple inheritance</td><td>❌ One only (extends one)</td><td>✅ A class can implement many</td></tr>
+          <tr><td>Access modifiers</td><td>Any</td><td>All members public by default</td></tr>
+          <tr><td>Use when</td><td>Shared base behaviour + state</td><td>Define a capability contract</td></tr>
+        </table>
+      </div>
+      <div class="tip">Rule of thumb: Use abstract class for "is-a" (Dog is an Animal). Use interface for "can-do" (Dog can Swim, can Fetch).</div>
+    </div>
+  </details>
+
+  <!-- Q38 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 38</span>
+      <span class="q-title">What is a Functional Interface in Java? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>A functional interface has exactly ONE abstract method. It can be used with lambda expressions. Common examples: Runnable, Comparator, Predicate, Function, Consumer, Supplier.</div>
+      <pre><code><span class="kw">@FunctionalInterface</span>
+<span class="kw">interface</span> <span class="cl">MathOperation</span> {
+    <span class="kw">int</span> operate(<span class="kw">int</span> a, <span class="kw">int</span> b);  <span class="cm">// exactly ONE abstract method</span>
+}
+
+<span class="cm">// Use with lambda</span>
+<span class="cl">MathOperation</span> add      = (a, b) -> a + b;
+<span class="cl">MathOperation</span> multiply = (a, b) -> a * b;
+
+<span class="cl">System</span>.out.println(add.operate(<span class="num">5</span>, <span class="num">3</span>));      <span class="cm">// 8</span>
+<span class="cl">System</span>.out.println(multiply.operate(<span class="num">5</span>, <span class="num">3</span>)); <span class="cm">// 15</span></code></pre>
+      <div class="tip">@FunctionalInterface annotation is optional but recommended — it makes the compiler enforce the single-abstract-method rule.</div>
+    </div>
+  </details>
+
+  <!-- Q39 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 39</span>
+      <span class="q-title">What is the Stream API in Java? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>The Stream API (Java 8) provides a functional way to process collections using a pipeline of filter/map/reduce operations — without modifying the original data.</div>
+      <h4>Stream Operations</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Operation Type</th><th>Methods</th><th>Description</th></tr>
+          <tr><td><strong>Intermediate</strong> (lazy)</td><td>filter(), map(), flatMap(), sorted(), distinct(), limit(), skip()</td><td>Transforms stream, returns stream</td></tr>
+          <tr><td><strong>Terminal</strong> (eager)</td><td>collect(), forEach(), count(), reduce(), findFirst(), anyMatch()</td><td>Triggers processing, returns result</td></tr>
+        </table>
+      </div>
+      <pre><code><span class="cl">List</span>&lt;<span class="cl">Integer</span>&gt; nums = <span class="cl">Arrays</span>.asList(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>);
+
+<span class="cm">// Sum of squares of even numbers</span>
+<span class="kw">int</span> sumOfEvenSquares = nums.stream()
+    .filter(n -> n % <span class="num">2</span> == <span class="num">0</span>)      <span class="cm">// 2, 4, 6</span>
+    .mapToInt(n -> n * n)          <span class="cm">// 4, 16, 36</span>
+    .sum();                        <span class="cm">// 56</span>
+
+<span class="cm">// Group people by city</span>
+<span class="cl">Map</span>&lt;<span class="cl">String</span>, <span class="cl">List</span>&lt;<span class="cl">Person</span>&gt;&gt; byCity = people.stream()
+    .collect(<span class="cl">Collectors</span>.groupingBy(<span class="cl">Person</span>::getCity));</code></pre>
+      <div class="tip">Streams are lazy — intermediate operations don't execute until a terminal operation is called. This makes pipelines efficient.</div>
+    </div>
+  </details>
+
+  <!-- Q40 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 40</span>
+      <span class="q-title">What is OOPS? Explain all four pillars with examples. <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>OOP (Object-Oriented Programming) organizes code around objects. The 4 pillars are: Encapsulation (data hiding), Inheritance (code reuse), Polymorphism (many forms), Abstraction (hiding complexity).</div>
+      <h4>Quick Summary Table</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Pillar</th><th>What It Does</th><th>How to Achieve</th><th>Keyword</th></tr>
+          <tr><td><strong>Encapsulation</strong></td><td>Bundles data + methods, hides internals</td><td>private fields + getters/setters</td><td>private</td></tr>
+          <tr><td><strong>Inheritance</strong></td><td>Child class reuses parent's code</td><td>extends keyword</td><td>extends</td></tr>
+          <tr><td><strong>Polymorphism</strong></td><td>Same method, different behaviour</td><td>Overloading / Overriding</td><td>@Override</td></tr>
+          <tr><td><strong>Abstraction</strong></td><td>Hides complexity, shows essential features</td><td>Abstract class / Interface</td><td>abstract / interface</td></tr>
+        </table>
+      </div>
+      <div class="tip">In an interview, explain each pillar with a real-world analogy (ATM = encapsulation, Vehicle hierarchy = inheritance, pay() method = polymorphism, TV remote = abstraction).</div>
+    </div>
+  </details>
+
+  <!-- Q41 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 41</span>
+      <span class="q-title">What is a deadlock? How do you prevent it? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Deadlock is when two or more threads are waiting for each other to release a lock — permanently blocked, neither can proceed.</div>
+      <h4>Classic Deadlock Scenario</h4>
+      <pre><code><span class="cm">// Thread 1: holds Lock A, waits for Lock B</span>
+<span class="cm">// Thread 2: holds Lock B, waits for Lock A</span>
+<span class="cm">// → Both frozen forever!</span>
+
+<span class="kw">synchronized</span>(lockA) {
+    <span class="kw">synchronized</span>(lockB) { <span class="cm">// Thread 1 order: A → B</span>
+        <span class="cm">// work</span>
+    }
+}
+
+<span class="kw">synchronized</span>(lockB) {
+    <span class="kw">synchronized</span>(lockA) { <span class="cm">// Thread 2 order: B → A  ← DEADLOCK!</span>
+        <span class="cm">// work</span>
+    }
+}</code></pre>
+      <h4>Deadlock Prevention Strategies</h4>
+      <ul>
+        <li><strong>Lock ordering</strong> — Always acquire locks in the same order across all threads</li>
+        <li><strong>tryLock with timeout</strong> — Use ReentrantLock.tryLock(timeout) instead of blocking indefinitely</li>
+        <li><strong>Lock timeout detection</strong> — Monitor threads and break deadlock if detected</li>
+        <li><strong>Avoid nested locks</strong> — Minimize scenarios where one lock is held while acquiring another</li>
+        <li><strong>Use higher-level concurrency</strong> — java.util.concurrent classes are designed to avoid deadlocks</li>
+      </ul>
+      <div class="tip">Deadlock has 4 necessary conditions (Coffman's conditions): Mutual Exclusion, Hold and Wait, No Preemption, Circular Wait. Removing any one condition prevents deadlock.</div>
+    </div>
+  </details>
+
+  <!-- Q42 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 42</span>
+      <span class="q-title">What are wrapper classes in Java? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Wrapper classes wrap primitive types into objects — Integer wraps int, Double wraps double, etc. — allowing primitives to be used in collections and APIs that require objects.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Primitive</th><th>Wrapper Class</th></tr>
+          <tr><td>int</td><td>Integer</td></tr>
+          <tr><td>double</td><td>Double</td></tr>
+          <tr><td>char</td><td>Character</td></tr>
+          <tr><td>boolean</td><td>Boolean</td></tr>
+          <tr><td>long</td><td>Long</td></tr>
+          <tr><td>float</td><td>Float</td></tr>
+          <tr><td>byte</td><td>Byte</td></tr>
+          <tr><td>short</td><td>Short</td></tr>
+        </table>
+      </div>
+      <h4>Autoboxing &amp; Unboxing</h4>
+      <pre><code><span class="cm">// Autoboxing: primitive → wrapper (automatic)</span>
+<span class="cl">Integer</span> i = <span class="num">42</span>;  <span class="cm">// Java auto-converts int to Integer</span>
+
+<span class="cm">// Unboxing: wrapper → primitive (automatic)</span>
+<span class="kw">int</span> n = i;     <span class="cm">// Java auto-converts Integer to int</span>
+
+<span class="cm">// Useful in collections (can't use int[])</span>
+<span class="cl">List</span>&lt;<span class="cl">Integer</span>&gt; list = <span class="kw">new</span> <span class="cl">ArrayList</span>&lt;&gt;();
+list.add(<span class="num">5</span>);  <span class="cm">// autoboxed to Integer.valueOf(5)</span></code></pre>
+      <div class="tip">Beware of NullPointerException with unboxing: Integer i = null; int n = i; → NPE! Also, Integer caches values -128 to 127 — so Integer a = 100; Integer b = 100; a == b is true! But a = 200; b = 200; a == b is false.</div>
+    </div>
+  </details>
+
+  <!-- Q43 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 43</span>
+      <span class="q-title">What is the difference between checked and unchecked exceptions? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Checked exceptions are checked at compile time and MUST be handled (IOException, SQLException). Unchecked exceptions (RuntimeException) are optional to handle and represent programming errors.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Checked Exception</th><th>Unchecked Exception</th></tr>
+          <tr><td>Checked when?</td><td>At compile time</td><td>At runtime only</td></tr>
+          <tr><td>Must handle?</td><td>✅ Yes — catch or throws</td><td>❌ Optional</td></tr>
+          <tr><td>Parent class</td><td>Exception (not Runtime)</td><td>RuntimeException</td></tr>
+          <tr><td>Represents</td><td>External failures (file missing, DB down)</td><td>Programming errors (null, index, cast)</td></tr>
+          <tr><td>Examples</td><td>IOException, SQLException, ClassNotFoundException</td><td>NullPointerException, ArrayIndexOutOfBoundsException, ClassCastException</td></tr>
+        </table>
+      </div>
+      <div class="tip">Modern Java best practice: prefer unchecked (runtime) exceptions for application errors — checked exceptions are good for infrastructure errors (IO, DB) where the caller must decide what to do.</div>
+    </div>
+  </details>
+
+  <!-- Q44 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 44</span>
+      <span class="q-title">What is the volatile keyword? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>volatile ensures that a variable's value is always read from and written to main memory — not a thread's local cache — making changes visible across all threads.</div>
+      <pre><code><span class="cm">// WITHOUT volatile: thread 2 may never see thread 1's update!</span>
+<span class="kw">class</span> <span class="cl">Worker</span> {
+    <span class="kw">private boolean</span> running = <span class="kw">true</span>;  <span class="cm">// cached by threads</span>
+    <span class="kw">void</span> stop() { running = <span class="kw">false</span>; } <span class="cm">// may not be visible to loop thread</span>
+    <span class="kw">void</span> work() { <span class="kw">while</span> (running) { <span class="cm">/* loop forever? */</span> } }
+}
+
+<span class="cm">// WITH volatile: guaranteed visibility</span>
+<span class="kw">private volatile boolean</span> running = <span class="kw">true</span>;  <span class="cm">// always in main memory</span></code></pre>
+      <h4>volatile vs synchronized</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>volatile</th><th>synchronized</th></tr>
+          <tr><td>Visibility guarantee</td><td>✅ Yes</td><td>✅ Yes</td></tr>
+          <tr><td>Atomicity</td><td>❌ No (count++ is not safe)</td><td>✅ Yes</td></tr>
+          <tr><td>Performance</td><td>Faster (no lock)</td><td>Slower (lock overhead)</td></tr>
+          <tr><td>Use for</td><td>Simple flags/state</td><td>Complex operations</td></tr>
+        </table>
+      </div>
+      <div class="tip">volatile is ideal for stop/flag variables. Use AtomicInteger for thread-safe counters, synchronized or locks for critical sections with multiple operations.</div>
+    </div>
+  </details>
+
+  <!-- Q45 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 45</span>
+      <span class="q-title">What is the difference between == and equals() for Integer wrapper? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Java caches Integer objects from -128 to 127 in a pool. So == works for these values but fails for larger ones. Always use equals() for Integer comparison.</div>
+      <pre><code><span class="cl">Integer</span> a = <span class="num">100</span>;
+<span class="cl">Integer</span> b = <span class="num">100</span>;
+<span class="cl">System</span>.out.println(a == b);      <span class="cm">// true  ← from Integer cache</span>
+<span class="cl">System</span>.out.println(a.equals(b)); <span class="cm">// true</span>
+
+<span class="cl">Integer</span> x = <span class="num">200</span>;
+<span class="cl">Integer</span> y = <span class="num">200</span>;
+<span class="cl">System</span>.out.println(x == y);      <span class="cm">// false ← outside cache range!</span>
+<span class="cl">System</span>.out.println(x.equals(y)); <span class="cm">// true  ← always use this!</span></code></pre>
+      <div class="tip">This is a classic Java interview trick question! Always use equals() for all object comparisons. The Integer cache only covers -128 to 127.</div>
+    </div>
+  </details>
+
+  <!-- Q46 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 46</span>
+      <span class="q-title">What is Dependency Injection? How does Spring use it? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Dependency Injection (DI) is a design pattern where an object receives its dependencies from outside (injected) rather than creating them itself — enabling loose coupling and testability.</div>
+      <h4>Without DI (tight coupling)</h4>
+      <pre><code><span class="kw">class</span> <span class="cl">OrderService</span> {
+    <span class="kw">private</span> <span class="cl">PaymentService</span> payment = <span class="kw">new</span> <span class="cl">PaymentService</span>(); <span class="cm">// hardcoded!</span>
+}</code></pre>
+      <h4>With DI (loose coupling)</h4>
+      <pre><code><span class="kw">@Service</span>
+<span class="kw">class</span> <span class="cl">OrderService</span> {
+    <span class="kw">private final</span> <span class="cl">PaymentService</span> payment;
+
+    <span class="kw">@Autowired</span>  <span class="cm">// Spring injects PaymentService</span>
+    <span class="cl">OrderService</span>(<span class="cl">PaymentService</span> payment) {
+        <span class="kw">this</span>.payment = payment;
+    }
+}</code></pre>
+      <h4>Three Types of Injection in Spring</h4>
+      <ul>
+        <li><strong>Constructor Injection</strong> — ✅ Recommended (dependencies immutable, easier to test)</li>
+        <li><strong>Setter Injection</strong> — For optional dependencies</li>
+        <li><strong>Field Injection (@Autowired on field)</strong> — ❌ Avoid (hides dependencies, hard to test)</li>
+      </ul>
+      <div class="tip">Always prefer constructor injection. It makes dependencies explicit, supports immutability (final fields), and makes unit testing without Spring container easy.</div>
+    </div>
+  </details>
+
+  <!-- Q47 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 47</span>
+      <span class="q-title">What is the difference between @Component, @Service, @Repository, @Controller? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>All four are Spring stereotypes that mark a class as a Spring-managed bean. They're functionally equivalent to @Component, but carry semantic meaning and enable layer-specific behaviour.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Annotation</th><th>Layer</th><th>Purpose</th><th>Extra Behaviour</th></tr>
+          <tr><td><strong>@Component</strong></td><td>Generic</td><td>Any Spring bean</td><td>None specific</td></tr>
+          <tr><td><strong>@Service</strong></td><td>Service/Business</td><td>Business logic</td><td>Semantic clarity</td></tr>
+          <tr><td><strong>@Repository</strong></td><td>Data Access</td><td>DAO / database layer</td><td>Auto-translates DB exceptions to Spring DataAccessException</td></tr>
+          <tr><td><strong>@Controller</strong></td><td>Web/Presentation</td><td>Handles HTTP requests</td><td>Works with Spring MVC view resolution</td></tr>
+          <tr><td><strong>@RestController</strong></td><td>Web/REST API</td><td>REST endpoints</td><td>= @Controller + @ResponseBody</td></tr>
+        </table>
+      </div>
+      <div class="tip">Always use the semantically correct annotation. @Repository especially matters because it enables automatic exception translation for persistence layer.</div>
+    </div>
+  </details>
+
+  <!-- Q48 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 48</span>
+      <span class="q-title">What is the difference between @RequestParam and @PathVariable? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>@PathVariable extracts values from the URL path (/users/{id}). @RequestParam extracts values from query parameters (/users?id=5).</div>
+      <pre><code><span class="cm">// @PathVariable — part of the URL path</span>
+<span class="kw">@GetMapping</span>(<span class="str">"/users/{id}"</span>)
+<span class="kw">public</span> <span class="cl">User</span> getUser(<span class="kw">@PathVariable</span> <span class="cl">Long</span> id) {
+    <span class="kw">return</span> userService.findById(id);
+}
+<span class="cm">// Call: GET /users/42</span>
+
+<span class="cm">// @RequestParam — query parameter</span>
+<span class="kw">@GetMapping</span>(<span class="str">"/users"</span>)
+<span class="kw">public</span> <span class="cl">List</span>&lt;<span class="cl">User</span>&gt; getUsers(
+    <span class="kw">@RequestParam</span>(<span class="str">"city"</span>) <span class="cl">String</span> city,
+    <span class="kw">@RequestParam</span>(value = <span class="str">"page"</span>, defaultValue = <span class="str">"0"</span>) <span class="kw">int</span> page) {
+    <span class="kw">return</span> userService.findByCity(city, page);
+}
+<span class="cm">// Call: GET /users?city=Mumbai&amp;page=1</span></code></pre>
+      <div class="tip">Use @PathVariable for identifying a resource (user ID, product ID). Use @RequestParam for filtering, sorting, pagination parameters.</div>
+    </div>
+  </details>
+
+  <!-- Q49 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 49</span>
+      <span class="q-title">What is the difference between HashMap and LinkedHashMap and TreeMap? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>HashMap is unordered. LinkedHashMap maintains insertion order. TreeMap maintains sorted order (keys sorted naturally or by Comparator).</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>HashMap</th><th>LinkedHashMap</th><th>TreeMap</th></tr>
+          <tr><td>Order</td><td>No order</td><td>Insertion order</td><td>Sorted (natural/custom)</td></tr>
+          <tr><td>Performance</td><td>O(1) avg</td><td>O(1) avg (slightly slower)</td><td>O(log n)</td></tr>
+          <tr><td>Null keys</td><td>✅ One</td><td>✅ One</td><td>❌ No</td></tr>
+          <tr><td>Use when</td><td>Fast unordered lookup</td><td>Preserve insertion order</td><td>Sorted data needed</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q50 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 50</span>
+      <span class="q-title">What are design patterns? Name the most common ones. <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Design patterns are reusable solutions to commonly occurring software design problems. The 23 GoF patterns are grouped into Creational, Structural, and Behavioral categories.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Category</th><th>Pattern</th><th>Simple Description</th></tr>
+          <tr><td rowspan="4"><strong>Creational</strong></td><td>Singleton</td><td>Only one instance allowed (DB connection pool)</td></tr>
+          <tr><td>Factory Method</td><td>Delegate object creation to subclasses</td></tr>
+          <tr><td>Builder</td><td>Construct complex objects step by step</td></tr>
+          <tr><td>Prototype</td><td>Clone existing objects</td></tr>
+          <tr><td rowspan="3"><strong>Structural</strong></td><td>Adapter</td><td>Convert one interface to another (power adapter)</td></tr>
+          <tr><td>Decorator</td><td>Add functionality without changing original</td></tr>
+          <tr><td>Proxy</td><td>Wrapper that controls access to another object</td></tr>
+          <tr><td rowspan="3"><strong>Behavioral</strong></td><td>Observer</td><td>Notify dependents when state changes (event listener)</td></tr>
+          <tr><td>Strategy</td><td>Swap algorithms at runtime</td></tr>
+          <tr><td>Template Method</td><td>Define skeleton of algorithm; subclass fills steps</td></tr>
+        </table>
+      </div>
+      <div class="tip">The most commonly asked in Java interviews: Singleton, Factory, Builder, Observer, and Strategy. Know Singleton's double-checked locking for thread safety!</div>
+    </div>
+  </details>
+
+</div>
+
+<script>
+  // Smooth open/close animation
+  document.querySelectorAll('details').forEach(detail => {
+    detail.addEventListener('toggle', () => {
+      if (detail.open) {
+        const body = detail.querySelector('.answer-body');
+        if (body) {
+          body.style.animation = 'fadeIn 0.25s ease';
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+</body>
+</html>
