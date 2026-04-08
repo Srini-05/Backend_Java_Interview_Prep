@@ -1525,7 +1525,15 @@ name.ifPresent(n -> <span class="cl">System</span>.out.println(n.toUpperCase()))
       </ul>
       <h4>Complete Example</h4>
       <pre><code><span class="kw">public void</span> readFile(<span class="cl">String</span> path) <span class="kw">throws</span> <span class="cl">IOException</span> {
-    <span class="kw">try</span> (<span class="cl">BufferedReader</span> br = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(path))) {
+    <span class="cl">Path</span> baseDir = <span class="cl">Paths</span>.get(<span class="str">"/safe/dir"</span>);
+    <span class="cl">Path</span> resolvedPath = baseDir.resolve(path).normalize();
+
+    <span class="cm">// Validate path to prevent Path Traversal</span>
+    <span class="kw">if</span> (!resolvedPath.startsWith(baseDir)) {
+        <span class="kw">throw new</span> <span class="cl">SecurityException</span>(<span class="str">"Invalid path: "</span> + path);
+    }
+
+    <span class="kw">try</span> (<span class="cl">BufferedReader</span> br = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(resolvedPath.toFile()))) {
         <span class="cl">String</span> line;
         <span class="kw">while</span> ((line = br.readLine()) != <span class="kw">null</span>) {
             <span class="cl">System</span>.out.println(line);
