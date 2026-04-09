@@ -380,8 +380,8 @@
     <h1>Java Backend<br><span>Interview Questions</span></h1>
     <p class="hero-sub">A complete, structured guide covering Java Basics to Advanced — with clear explanations, code examples, and comparison tables.</p>
     <div class="hero-stats">
-      <div class="stat"><span class="stat-num">50+</span><span class="stat-label">Questions</span></div>
-      <div class="stat"><span class="stat-num">8</span><span class="stat-label">Topic Sections</span></div>
+      <div class="stat"><span class="stat-num">70+</span><span class="stat-label">Questions</span></div>
+      <div class="stat"><span class="stat-num">14</span><span class="stat-label">Topic Sections</span></div>
       <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Accordion UI</span></div>
     </div>
   </div>
@@ -403,6 +403,10 @@
       <a href="#spring" class="toc-item"><span class="toc-dot" style="background:#ffa657"></span>Spring Framework</a>
       <a href="#exceptions" class="toc-item"><span class="toc-dot" style="background:#d2a8ff"></span>Exceptions</a>
       <a href="#extra" class="toc-item"><span class="toc-dot" style="background:#f78166"></span>Bonus Q&amp;A</a>
+      <a href="#hibernate" class="toc-item"><span class="toc-dot" style="background:#56d364"></span>Hibernate &amp; JPA</a>
+      <a href="#microservices" class="toc-item"><span class="toc-dot" style="background:#79c0ff"></span>Microservices</a>
+      <a href="#db" class="toc-item"><span class="toc-dot" style="background:#ffa657"></span>Databases &amp; SQL</a>
+      <a href="#testing" class="toc-item"><span class="toc-dot" style="background:#d2a8ff"></span>Testing</a>
     </div>
   </div>
 
@@ -2236,6 +2240,406 @@ map.put(<span class="str">"Java"</span>, <span class="num">21</span>); <span cla
 cache.put(<span class="kw">new</span> <span class="cl">Key</span>(<span class="str">"id1"</span>), <span class="str">"data"</span>);
 cache.put(<span class="kw">new</span> <span class="cl">Key</span>(<span class="str">"id1"</span>), <span class="str">"data"</span>); <span class="cm">// Adds a new entry instead of replacing!</span></code></pre>
       <div class="tip"><div>To find memory leaks, take a Heap Dump (using tools like jmap or jcmd) and analyze it with Eclipse MAT or VisualVM to find which objects are holding onto memory.</div></div>
+    </div>
+  </details>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 11: HIBERNATE & JPA            -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="hibernate" class="section-header">
+    <div class="section-icon" style="background:rgba(86,211,100,0.1)">🗄️</div>
+    <div class="section-title-wrap">
+      <h2>Hibernate &amp; JPA</h2>
+      <p>ORM, caching, mappings, and N+1 query problem</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q55 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 55</span>
+      <span class="q-title">What is the difference between JPA and Hibernate? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>JPA (Java Persistence API) is a specification or standard for ORM in Java, whereas Hibernate is the actual implementation of that specification.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Aspect</th><th>JPA</th><th>Hibernate</th></tr>
+          <tr><td>Nature</td><td>Specification / Standard (interfaces)</td><td>Implementation (classes)</td></tr>
+          <tr><td>Package</td><td><code>javax.persistence.*</code> (or <code>jakarta.persistence.*</code>)</td><td><code>org.hibernate.*</code></td></tr>
+          <tr><td>Examples</td><td>EntityManager, Query</td><td>Session, Criteria</td></tr>
+        </table>
+      </div>
+      <div class="tip"><div>Always use JPA annotations (<code>@Entity</code>, <code>@Table</code>) instead of Hibernate-specific ones. This allows you to easily switch to another JPA provider like EclipseLink in the future if needed.</div></div>
+    </div>
+  </details>
+
+  <!-- Q56 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 56</span>
+      <span class="q-title">What is the N+1 SELECT problem in Hibernate? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>The N+1 problem occurs when an ORM framework executes 1 query to retrieve the parent entities, and then N additional queries to fetch their lazily-loaded child associations, killing performance.</div>
+      <h4>Example Scenario</h4>
+      <p>Imagine a <code>Department</code> entity that has many <code>Employee</code>s.</p>
+      <pre><code><span class="cm">// You fetch all departments (1 Query)</span>
+<span class="cl">List</span>&lt;<span class="cl">Department</span>&gt; depts = entityManager.createQuery(<span class="str">"FROM Department"</span>).getResultList();
+
+<span class="cm">// Then loop through them and get their employees</span>
+<span class="kw">for</span> (<span class="cl">Department</span> d : depts) {
+    <span class="cl">System</span>.out.println(d.getEmployees().size()); <span class="cm">// Triggers N separate queries!</span>
+}</code></pre>
+      <h4>How to Fix It</h4>
+      <ul>
+        <li><strong>JOIN FETCH:</strong> Use JPQL <code>SELECT d FROM Department d JOIN FETCH d.employees</code> to get everything in 1 query.</li>
+        <li><strong>EntityGraph:</strong> Use JPA 2.1 EntityGraphs to specify what should be eagerly fetched dynamically.</li>
+        <li><strong>@BatchSize:</strong> Tell Hibernate to fetch collections in batches (e.g., <code>@BatchSize(size = 20)</code>) to reduce the number of queries.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Q57 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 57</span>
+      <span class="q-title">Explain the different caching levels in Hibernate. <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Hibernate has two levels of caching: L1 (Session level, enabled by default, cleared when session closes) and L2 (SessionFactory level, disabled by default, shared across all sessions).</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>First Level Cache (L1)</th><th>Second Level Cache (L2)</th></tr>
+          <tr><td>Scope</td><td>Session (EntityManager)</td><td>SessionFactory (Application)</td></tr>
+          <tr><td>Enabled by default?</td><td>✅ Yes</td><td>❌ No (requires provider like Ehcache)</td></tr>
+          <tr><td>Thread safe?</td><td>N/A (tied to a single thread/session)</td><td>Yes (shared across threads)</td></tr>
+        </table>
+      </div>
+      <div class="tip"><div>There is also a <strong>Query Cache</strong>, which caches the results of specific queries. It only caches the IDs of the entities returned, so it must be used alongside the L2 cache for performance gains.</div></div>
+    </div>
+  </details>
+
+  <!-- Q58 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 58</span>
+      <span class="q-title">What is the difference between get() and load()? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong><code>get()</code> hits the database immediately and returns null if not found. <code>load()</code> returns a proxy object and hits the database only when a method on the proxy is called, throwing an exception if not found.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>get()</th><th>load()</th></tr>
+          <tr><td>Execution</td><td>Eager (hits DB immediately)</td><td>Lazy (returns a proxy)</td></tr>
+          <tr><td>When object not found</td><td>Returns <code>null</code></td><td>Throws <code>ObjectNotFoundException</code></td></tr>
+          <tr><td>Performance</td><td>Slower (always hits DB)</td><td>Faster (only hits DB if needed)</td></tr>
+        </table>
+      </div>
+      <div class="tip"><div>Use <code>load()</code> when you only need the object to establish a foreign key relationship (e.g., setting a user on an order) without actually needing to read the user's data.</div></div>
+    </div>
+  </details>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 12: MICROSERVICES ARCHITECTURE -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="microservices" class="section-header">
+    <div class="section-icon" style="background:rgba(121,192,255,0.1)">☁️</div>
+    <div class="section-title-wrap">
+      <h2>Microservices Architecture</h2>
+      <p>Principles, communication, and patterns</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q59 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 59</span>
+      <span class="q-title">What are Microservices and what are their advantages? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Microservices architecture breaks a large monolithic application into small, independent, loosely-coupled services that communicate over network protocols (like HTTP/REST or messaging).</div>
+      <h4>Key Advantages</h4>
+      <ul>
+        <li><strong>Independent Deployment:</strong> You can update the Payment service without redeploying the User service.</li>
+        <li><strong>Technology Diversity:</strong> Different services can use different languages or databases (Polyglot persistence).</li>
+        <li><strong>Fault Isolation:</strong> If the Email service crashes, the core Ordering system can stay up.</li>
+        <li><strong>Scalability:</strong> You can scale only the services that have high traffic, rather than scaling the whole monolith.</li>
+      </ul>
+      <div class="tip"><div>Be ready to discuss the trade-offs! Microservices introduce complexity: distributed transactions, network latency, difficult debugging, and complex CI/CD pipelines.</div></div>
+    </div>
+  </details>
+
+  <!-- Q60 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 60</span>
+      <span class="q-title">What is an API Gateway? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>An API Gateway is a single entry point for all client requests into a microservices architecture. It routes requests to the appropriate backend services.</div>
+      <h4>Responsibilities of an API Gateway</h4>
+      <ul>
+        <li><strong>Routing:</strong> Maps external URLs (e.g., <code>/api/users</code>) to internal service IP addresses.</li>
+        <li><strong>Authentication &amp; Authorization:</strong> Verifies tokens (like JWT) before letting requests reach the microservices.</li>
+        <li><strong>Rate Limiting:</strong> Prevents abuse by limiting how many requests a client can make.</li>
+        <li><strong>Aggregation:</strong> Combines data from multiple services into a single response to reduce client round-trips.</li>
+      </ul>
+      <p>Common tools: Spring Cloud Gateway, Kong, NGINX, AWS API Gateway.</p>
+    </div>
+  </details>
+
+  <!-- Q61 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 61</span>
+      <span class="q-title">How do Microservices communicate with each other? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Microservices communicate synchronously using REST (HTTP) or gRPC, or asynchronously using Message Brokers (like RabbitMQ or Kafka) for event-driven architecture.</div>
+      <h4>Synchronous (Request-Response)</h4>
+      <ul>
+        <li><strong>REST/HTTP:</strong> Easy to implement, standard JSON payloads. Used when a service needs an immediate answer.</li>
+        <li><strong>gRPC:</strong> Faster, uses Protocol Buffers (binary). Great for high-performance internal communication.</li>
+      </ul>
+      <h4>Asynchronous (Event-Driven)</h4>
+      <ul>
+        <li><strong>Message Brokers (RabbitMQ/Kafka):</strong> Service A publishes an event ("UserCreated"). Service B and C listen and react asynchronously.</li>
+        <li><strong>Benefits:</strong> Highly decoupled, fault-tolerant (if Service B is down, the message stays in the queue until it comes back up).</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Q62 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 62</span>
+      <span class="q-title">What is the Saga Pattern? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>The Saga pattern manages distributed transactions across multiple microservices by using a sequence of local transactions, where each step publishes an event to trigger the next step.</div>
+      <h4>Why is it needed?</h4>
+      <p>In a monolith, you can use a traditional ACID database transaction (commit or rollback). In microservices, the Order service and Payment service have different databases. You cannot simply use a SQL transaction across them.</p>
+      <h4>How it works</h4>
+      <ol>
+        <li>Order Service creates a <code>PENDING</code> order and publishes an "OrderCreated" event.</li>
+        <li>Payment Service listens, processes payment, and publishes "PaymentSuccessful".</li>
+        <li>Inventory Service listens, reserves items, and publishes "InventoryReserved".</li>
+        <li>Order Service listens to both and marks the order <code>APPROVED</code>.</li>
+      </ol>
+      <h4>Compensating Transactions</h4>
+      <p>If a step fails (e.g., Inventory is out of stock), the system must run <strong>compensating transactions</strong> backwards to undo previous steps (e.g., refund the payment, cancel the order).</p>
+    </div>
+  </details>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 13: DATABASES & SQL            -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="db" class="section-header">
+    <div class="section-icon" style="background:rgba(255,166,87,0.1)">🛢️</div>
+    <div class="section-title-wrap">
+      <h2>Databases &amp; SQL</h2>
+      <p>ACID, Indexing, and transaction isolation levels</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q63 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 63</span>
+      <span class="q-title">What are ACID properties? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>ACID guarantees database transaction reliability: Atomicity (all or nothing), Consistency (valid state), Isolation (concurrent safe), Durability (saved permanently).</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Property</th><th>Meaning</th></tr>
+          <tr><td><strong>Atomicity</strong></td><td>A transaction is a single unit. If any part fails, the entire transaction rolls back.</td></tr>
+          <tr><td><strong>Consistency</strong></td><td>Database goes from one valid state to another, enforcing constraints and triggers.</td></tr>
+          <tr><td><strong>Isolation</strong></td><td>Concurrent transactions do not interfere with each other (controlled by Isolation Levels).</td></tr>
+          <tr><td><strong>Durability</strong></td><td>Once committed, the data survives even if there is a system crash or power loss.</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q64 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 64</span>
+      <span class="q-title">What are the different Transaction Isolation Levels? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Isolation levels define how strictly a database separates concurrent transactions. They are: Read Uncommitted, Read Committed, Repeatable Read, and Serializable.</div>
+      <h4>Common Read Phenomena (Problems)</h4>
+      <ul>
+        <li><strong>Dirty Read:</strong> Reading uncommitted changes from another transaction.</li>
+        <li><strong>Non-Repeatable Read:</strong> Reading the same row twice gets different data because another transaction updated it.</li>
+        <li><strong>Phantom Read:</strong> A query returns a different number of rows because another transaction inserted/deleted rows.</li>
+      </ul>
+      <h4>Isolation Levels vs Phenomena</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Isolation Level</th><th>Dirty Read</th><th>Non-Repeatable</th><th>Phantom Read</th></tr>
+          <tr><td><strong>Read Uncommitted</strong></td><td>❌ Possible</td><td>❌ Possible</td><td>❌ Possible</td></tr>
+          <tr><td><strong>Read Committed</strong></td><td>✅ Prevented</td><td>❌ Possible</td><td>❌ Possible</td></tr>
+          <tr><td><strong>Repeatable Read</strong></td><td>✅ Prevented</td><td>✅ Prevented</td><td>❌ Possible</td></tr>
+          <tr><td><strong>Serializable</strong> (Safest)</td><td>✅ Prevented</td><td>✅ Prevented</td><td>✅ Prevented</td></tr>
+        </table>
+      </div>
+      <div class="tip"><div>Most relational databases (like PostgreSQL and SQL Server) use <strong>Read Committed</strong> as the default. MySQL InnoDB uses <strong>Repeatable Read</strong>.</div></div>
+    </div>
+  </details>
+
+  <!-- Q65 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 65</span>
+      <span class="q-title">What is an Index and how does it work? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>An index is a database data structure (usually a B-Tree) that significantly speeds up data retrieval operations (SELECT) at the cost of slower writes (INSERT/UPDATE/DELETE).</div>
+      <h4>How it works</h4>
+      <p>Think of it like an index at the back of a book. Instead of scanning every single page (a Full Table Scan) to find a word, you look it up in the index to find the exact page number (Pointer) in O(log n) time.</p>
+      <h4>Clustered vs Non-Clustered</h4>
+      <ul>
+        <li><strong>Clustered Index:</strong> Dictates the physical order of the data on disk. A table can only have <strong>one</strong> clustered index (usually the Primary Key).</li>
+        <li><strong>Non-Clustered Index:</strong> A separate structure that stores the indexed column value and a pointer to the actual row. A table can have many non-clustered indexes.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Q66 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 66</span>
+      <span class="q-title">What is the CAP Theorem? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>The CAP theorem states that a distributed data store can only guarantee two out of three characteristics: Consistency, Availability, and Partition Tolerance.</div>
+      <ul>
+        <li><strong>Consistency (C):</strong> Every read receives the most recent write. All nodes see the exact same data at the same time.</li>
+        <li><strong>Availability (A):</strong> Every request receives a non-error response, without the guarantee that it contains the most recent write.</li>
+        <li><strong>Partition Tolerance (P):</strong> The system continues to operate despite an arbitrary number of messages being dropped/delayed by the network between nodes.</li>
+      </ul>
+      <div class="tip"><div>In the real world, network partitions (P) are unavoidable. Therefore, distributed databases must choose between Consistency (CP) like MongoDB/HBase, or Availability (AP) like Cassandra/DynamoDB.</div></div>
+    </div>
+  </details>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 14: TESTING (JUNIT & MOCKITO)  -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="testing" class="section-header">
+    <div class="section-icon" style="background:rgba(210,168,255,0.1)">🧪</div>
+    <div class="section-title-wrap">
+      <h2>Testing</h2>
+      <p>Unit testing, mocking, and TDD principles</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q67 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 67</span>
+      <span class="q-title">What is the difference between Unit Testing and Integration Testing? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Unit testing tests a single class or method in complete isolation using mocks. Integration testing tests how multiple components (like a Service, DB, and API) work together.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Aspect</th><th>Unit Testing</th><th>Integration Testing</th></tr>
+          <tr><td>Scope</td><td>Single Class/Method</td><td>Multiple connected components</td></tr>
+          <tr><td>Dependencies</td><td>Mocks/Stubs (No real DB)</td><td>Real databases, APIs, queues</td></tr>
+          <tr><td>Speed</td><td>Extremely fast (milliseconds)</td><td>Slower (seconds/minutes)</td></tr>
+          <tr><td>Tools</td><td>JUnit, Mockito</td><td>Testcontainers, SpringBootTest</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q68 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 68</span>
+      <span class="q-title">What is Mocking and why use Mockito? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Mocking is creating a fake version of an external dependency (like a database repository) so you can test your core logic in isolation. Mockito is the most popular Java framework for this.</div>
+      <pre><code><span class="kw">class</span> <span class="cl">UserServiceTest</span> {
+    <span class="kw">@Mock</span>
+    <span class="cl">UserRepository</span> repo; <span class="cm">// Fake database</span>
+
+    <span class="kw">@InjectMocks</span>
+    <span class="cl">UserService</span> service; <span class="cm">// Class being tested</span>
+
+    <span class="kw">@Test</span>
+    <span class="kw">void</span> testGetUser() {
+        <span class="cm">// 1. Arrange: Tell the mock what to do</span>
+        when(repo.findById(<span class="num">1L</span>)).thenReturn(<span class="cl">Optional</span>.of(<span class="kw">new</span> <span class="cl">User</span>(<span class="str">"Jules"</span>)));
+
+        <span class="cm">// 2. Act: Call the real service method</span>
+        <span class="cl">String</span> name = service.getUserName(<span class="num">1L</span>);
+
+        <span class="cm">// 3. Assert: Verify the outcome</span>
+        assertEquals(<span class="str">"Jules"</span>, name);
+        verify(repo).findById(<span class="num">1L</span>); <span class="cm">// Verify the mock was called</span>
+    }
+}</code></pre>
+    </div>
+  </details>
+
+  <!-- Q69 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 69</span>
+      <span class="q-title">What is Test-Driven Development (TDD)? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>TDD is a software development process where you write a failing test first, then write the minimal code to pass the test, and finally refactor the code (Red-Green-Refactor).</div>
+      <h4>The TDD Cycle</h4>
+      <ul>
+        <li>🔴 <strong>Red:</strong> Write a test for the next bit of functionality you want to add. Run it and watch it fail (because the feature doesn't exist yet).</li>
+        <li>🟢 <strong>Green:</strong> Write the simplest, quickest production code possible to make the test pass.</li>
+        <li>🔵 <strong>Refactor:</strong> Clean up the code, remove duplication, and apply design patterns while ensuring the tests still pass.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Q70 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 70</span>
+      <span class="q-title">What are the common annotations in JUnit 5? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Key JUnit 5 annotations include @Test, @BeforeEach, @AfterEach, @BeforeAll, @AfterAll, @Disabled, and @ParameterizedTest.</div>
+      <ul>
+        <li><code>@Test</code> — Marks a method as a test method.</li>
+        <li><code>@BeforeEach</code> / <code>@AfterEach</code> — Runs before/after <em>every</em> individual test method (good for resetting state).</li>
+        <li><code>@BeforeAll</code> / <code>@AfterAll</code> — Runs once before/after <em>all</em> tests in the class (must be static).</li>
+        <li><code>@ParameterizedTest</code> — Runs the same test multiple times with different inputs (used with <code>@ValueSource</code> or <code>@CsvSource</code>).</li>
+      </ul>
+      <div class="tip"><div>JUnit 5 requires Java 8+ and changed package names from <code>org.junit.*</code> (JUnit 4) to <code>org.junit.jupiter.api.*</code>.</div></div>
     </div>
   </details>
 
