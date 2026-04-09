@@ -1,0 +1,15 @@
+The UI is consistent and properly aligned up to the "Testing" section, with correct padding and spacing.
+
+However, starting from the "File Handling & I/O" section, the layout breaks — the left and right spacing is missing, and the UI looks inconsistent compared to the earlier sections. Please fix the spacing and ensure consistent padding and alignment across all sections.
+
+Additionally, I need a menu/navigation feature:
+
+* Add a menu (or sidebar / top navigation) below the main header.
+* This menu should display all topic headings.
+* When I click on a topic in the menu, it should smoothly navigate (scroll) to the corresponding section on the page.
+
+Please ensure:
+
+* Consistent UI spacing throughout the page
+* Clean and responsive layout
+* Smooth scrolling navigation to each section
