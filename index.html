@@ -380,8 +380,8 @@
     <h1>Java Backend<br><span>Interview Questions</span></h1>
     <p class="hero-sub">A complete, structured guide covering Java Basics to Advanced — with clear explanations, code examples, and comparison tables.</p>
     <div class="hero-stats">
-      <div class="stat"><span class="stat-num">70+</span><span class="stat-label">Questions</span></div>
-      <div class="stat"><span class="stat-num">14</span><span class="stat-label">Topic Sections</span></div>
+      <div class="stat"><span class="stat-num">95+</span><span class="stat-label">Questions</span></div>
+      <div class="stat"><span class="stat-num">22</span><span class="stat-label">Topic Sections</span></div>
       <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Accordion UI</span></div>
     </div>
   </div>
@@ -407,6 +407,14 @@
       <a href="#microservices" class="toc-item"><span class="toc-dot" style="background:#79c0ff"></span>Microservices</a>
       <a href="#db" class="toc-item"><span class="toc-dot" style="background:#ffa657"></span>Databases &amp; SQL</a>
       <a href="#testing" class="toc-item"><span class="toc-dot" style="background:#d2a8ff"></span>Testing</a>
+      <a href="#io" class="toc-item"><span class="toc-dot" style="background:#f78166"></span>File I/O</a>
+      <a href="#jdbc" class="toc-item"><span class="toc-dot" style="background:#79c0ff"></span>JDBC</a>
+      <a href="#build-tools" class="toc-item"><span class="toc-dot" style="background:#56d364"></span>Tools &amp; Git</a>
+      <a href="#dsa" class="toc-item"><span class="toc-dot" style="background:#d2a8ff"></span>DSA Basics</a>
+      <a href="#design-principles" class="toc-item"><span class="toc-dot" style="background:#56d364"></span>Design Principles</a>
+      <a href="#system-design" class="toc-item"><span class="toc-dot" style="background:#79c0ff"></span>System Design</a>
+      <a href="#web-security" class="toc-item"><span class="toc-dot" style="background:#ffa657"></span>Web &amp; Security</a>
+      <a href="#performance" class="toc-item"><span class="toc-dot" style="background:#d2a8ff"></span>Performance</a>
     </div>
   </div>
 
@@ -2644,8 +2652,605 @@ cache.put(<span class="kw">new</span> <span class="cl">Key</span>(<span class="s
   </details>
 
 </div>
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 15: FILE HANDLING & I/O        -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="io" class="section-header">
+    <div class="section-icon" style="background:rgba(247,129,102,0.1)">📁</div>
+    <div class="section-title-wrap">
+      <h2>File Handling &amp; I/O</h2>
+      <p>Serialization, readers, writers, and paths</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q71 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 71</span>
+      <span class="q-title">What is Serialization and Deserialization in Java? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Serialization converts a Java object into a byte stream so it can be saved to a file or sent over a network. Deserialization is the reverse process.</div>
+      <h4>How to do it</h4>
+      <p>A class must implement the <code>java.io.Serializable</code> marker interface. You then use <code>ObjectOutputStream</code> to serialize and <code>ObjectInputStream</code> to deserialize.</p>
+      <pre><code><span class="cm">// Example of a Serializable class</span>
+<span class="kw">class</span> <span class="cl">Employee</span> <span class="kw">implements</span> <span class="cl">Serializable</span> {
+    <span class="kw">private static final long</span> serialVersionUID = <span class="num">1L</span>;
+    <span class="cl">String</span> name;
+    <span class="kw">transient</span> <span class="cl">String</span> password; <span class="cm">// transient fields are NOT serialized!</span>
+}</code></pre>
+      <div class="tip"><div>Always declare a <code>serialVersionUID</code>. If you don't, Java generates one based on class details. If the class changes later, the generated ID changes, and deserialization will fail with an <code>InvalidClassException</code>.</div></div>
+    </div>
+  </details>
+
+  <!-- Q72 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 72</span>
+      <span class="q-title">What is the difference between Byte Streams and Character Streams? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Byte streams (InputStream/OutputStream) read/write data one byte (8 bits) at a time, mostly for binary data. Character streams (Reader/Writer) read/write data two bytes (16 bits) at a time, specifically for text/characters.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Byte Stream</th><th>Character Stream</th></tr>
+          <tr><td>Data Size</td><td>8-bit bytes</td><td>16-bit Unicode characters</td></tr>
+          <tr><td>Best For</td><td>Images, audio, raw binaries</td><td>Text files, strings</td></tr>
+          <tr><td>Core Classes</td><td><code>FileInputStream</code>, <code>FileOutputStream</code></td><td><code>FileReader</code>, <code>FileWriter</code></td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q73 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 73</span>
+      <span class="q-title">What is BufferedReader and why is it used? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong><code>BufferedReader</code> wraps around other Readers (like FileReader) to buffer characters in memory, making disk reads significantly faster by reducing the number of physical I/O operations.</div>
+      <pre><code><span class="cm">// Fast and efficient way to read a file line by line</span>
+<span class="kw">try</span> (<span class="cl">BufferedReader</span> br = <span class="kw">new</span> <span class="cl">BufferedReader</span>(<span class="kw">new</span> <span class="cl">FileReader</span>(<span class="str">"data.txt"</span>))) {
+    <span class="cl">String</span> line;
+    <span class="kw">while</span> ((line = br.readLine()) != <span class="kw">null</span>) {
+        <span class="cl">System</span>.out.println(line);
+    }
+} <span class="kw">catch</span> (<span class="cl">IOException</span> e) {
+    e.printStackTrace();
+}</code></pre>
+      <div class="tip"><div>Reading one character at a time from disk is very slow. The buffer loads a large chunk into memory at once, so subsequent <code>readLine()</code> or <code>read()</code> calls hit memory instead of the disk.</div></div>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 16: JDBC                       -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="jdbc" class="section-header">
+    <div class="section-icon" style="background:rgba(121,192,255,0.1)">🔗</div>
+    <div class="section-title-wrap">
+      <h2>JDBC (Java Database Connectivity)</h2>
+      <p>Connections, statements, and result sets</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q74 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 74</span>
+      <span class="q-title">What are the core components of JDBC? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>The core JDBC API components are DriverManager, Connection, Statement (or PreparedStatement), and ResultSet.</div>
+      <ul>
+        <li><strong>DriverManager:</strong> Manages a list of database drivers. It matches connection requests from the java application with the proper database driver.</li>
+        <li><strong>Connection:</strong> Represents a physical connection to the database. Used to create statements and manage transactions.</li>
+        <li><strong>Statement/PreparedStatement:</strong> Used to execute SQL queries against the database.</li>
+        <li><strong>ResultSet:</strong> Represents the result set of a database query. Used to iterate through the returned rows.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Q75 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 75</span>
+      <span class="q-title">What is the difference between Statement and PreparedStatement? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong><code>PreparedStatement</code> is pre-compiled and protects against SQL injection by safely escaping parameters, whereas <code>Statement</code> compiles the query every time and is vulnerable to injection if concatenating strings.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Statement</th><th>PreparedStatement</th></tr>
+          <tr><td>Compilation</td><td>Compiled at execution time</td><td>Pre-compiled by DB</td></tr>
+          <tr><td>Performance</td><td>Slower for repeated queries</td><td>Faster for repeated queries</td></tr>
+          <tr><td>Parameters</td><td>Hardcoded (string concatenation)</td><td>Dynamic (using <code>?</code> placeholders)</td></tr>
+          <tr><td>Security</td><td>❌ Vulnerable to SQL Injection</td><td>✅ Safe from SQL Injection</td></tr>
+        </table>
+      </div>
+      <div class="tip"><div>Always, always use <code>PreparedStatement</code> in production code. <code>Statement</code> should basically never be used unless executing a simple, static DDL string.</div></div>
+    </div>
+  </details>
+
+  <!-- Q76 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 76</span>
+      <span class="q-title">How do you manage transactions in JDBC? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>To manage transactions, you turn off auto-commit (<code>conn.setAutoCommit(false)</code>), execute your updates, and then either call <code>conn.commit()</code> on success or <code>conn.rollback()</code> on failure.</div>
+      <pre><code><span class="kw">try</span> (<span class="cl">Connection</span> conn = <span class="cl">DriverManager</span>.getConnection(url, user, pass)) {
+    <span class="cm">// 1. Disable Auto-Commit</span>
+    conn.setAutoCommit(<span class="kw">false</span>);
+
+    <span class="kw">try</span> (<span class="cl">PreparedStatement</span> pstmt = conn.prepareStatement(sql)) {
+        <span class="cm">// Execute multiple queries...</span>
+        pstmt.executeUpdate();
+
+        <span class="cm">// 2. Commit if everything succeeds</span>
+        conn.commit();
+    } <span class="kw">catch</span> (<span class="cl">SQLException</span> e) {
+        <span class="cm">// 3. Rollback if any error occurs</span>
+        conn.rollback();
+    }
+}</code></pre>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 17: BUILD TOOLS & GIT          -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="build-tools" class="section-header">
+    <div class="section-icon" style="background:rgba(86,211,100,0.1)">🛠️</div>
+    <div class="section-title-wrap">
+      <h2>Build Tools &amp; Version Control</h2>
+      <p>Maven, Gradle, dependencies, and Git workflow</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q77 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 77</span>
+      <span class="q-title">What is the difference between Maven and Gradle? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Maven uses an XML-based <code>pom.xml</code> and follows a rigid lifecycle, while Gradle uses a Groovy/Kotlin DSL (<code>build.gradle</code>) and offers highly customizable, faster incremental builds.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Maven</th><th>Gradle</th></tr>
+          <tr><td>Configuration</td><td>XML (pom.xml)</td><td>Groovy or Kotlin DSL</td></tr>
+          <tr><td>Flexibility</td><td>Strict conventions</td><td>Highly customizable</td></tr>
+          <tr><td>Performance</td><td>Standard (downloads everything)</td><td>Faster (incremental builds, build cache)</td></tr>
+          <tr><td>Ecosystem</td><td>Standard in Enterprise Java</td><td>Standard in Android / Modern Java</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q78 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 78</span>
+      <span class="q-title">What is a Transitive Dependency? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>A transitive dependency is a dependency of your dependency. If your project requires Library A, and Library A requires Library B, the build tool automatically downloads Library B for you.</div>
+      <p>While useful, transitive dependencies can cause <strong>dependency hell</strong> (version conflicts). For example, if Library A brings in version 1.0 of a logging tool, but Library C brings in version 2.0. You use <code>&lt;exclusions&gt;</code> in Maven to resolve these conflicts.</p>
+    </div>
+  </details>
+
+  <!-- Q79 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 79</span>
+      <span class="q-title">Explain the basic Git workflow (commit, send, receive). <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Git uses a distributed workflow: you <code>add</code> files to staging, <code>commit</code> them to your local repository, and send them to a remote server (like GitHub). You also pull to get updates from others.</div>
+      <ul>
+        <li><code>git status</code> — Check which files are modified.</li>
+        <li><code>git add &lt;file&gt;</code> — Moves a modified file to the Staging Area.</li>
+        <li><code>git commit -m "msg"</code> — Saves the staged changes into the local repository history.</li>
+        <li><code>git merge</code> — Combines changes from one branch into another.</li>
+      </ul>
+    </div>
+  </details>
+
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 18: DATA STRUCTURES & ALGO     -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="dsa" class="section-header">
+    <div class="section-icon" style="background:rgba(210,168,255,0.1)">🧮</div>
+    <div class="section-title-wrap">
+      <h2>Data Structures &amp; Algorithms</h2>
+      <p>Big-O, Stacks, Queues, and core concepts</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q80 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 80</span>
+      <span class="q-title">What is Big-O Notation? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Big-O notation describes the worst-case time complexity (how long it takes) or space complexity (how much memory it uses) of an algorithm as the input size (n) grows.</div>
+      <h4>Common Time Complexities</h4>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Complexity</th><th>Name</th><th>Example</th></tr>
+          <tr><td><strong>O(1)</strong></td><td>Constant</td><td>Accessing an array element by index.</td></tr>
+          <tr><td><strong>O(log n)</strong></td><td>Logarithmic</td><td>Binary search in a sorted array.</td></tr>
+          <tr><td><strong>O(n)</strong></td><td>Linear</td><td>Looping through all elements in an array.</td></tr>
+          <tr><td><strong>O(n log n)</strong></td><td>Log-Linear</td><td>Efficient sorting algorithms (Merge Sort, Quick Sort).</td></tr>
+          <tr><td><strong>O(n²)</strong></td><td>Quadratic</td><td>Nested loops (Bubble Sort, searching a 2D matrix).</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q81 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 81</span>
+      <span class="q-title">What is the difference between a Stack and a Queue? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>A Stack follows LIFO (Last-In-First-Out), like a stack of plates. A Queue follows FIFO (First-In-First-Out), like a line of people at a store.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Stack (LIFO)</th><th>Queue (FIFO)</th></tr>
+          <tr><td>Insertion</td><td><code>push()</code> (adds to top)</td><td><code>offer()</code> or <code>enqueue()</code> (adds to back)</td></tr>
+          <tr><td>Removal</td><td><code>pop()</code> (removes from top)</td><td><code>poll()</code> or <code>dequeue()</code> (removes from front)</td></tr>
+          <tr><td>Inspection</td><td><code>peek()</code> (looks at top)</td><td><code>peek()</code> (looks at front)</td></tr>
+          <tr><td>Use cases</td><td>Undo features, call stacks, DFS graph traversal</td><td>Task scheduling, message brokers, BFS graph traversal</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q82 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 82</span>
+      <span class="q-title">What is the difference between an Array and a Linked List? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>An Array stores elements in contiguous memory locations, offering fast O(1) reads but slow insertions. A Linked List stores elements as nodes scattered in memory, offering fast O(1) insertions at ends but slow O(n) reads.</div>
+      <div class="tip"><div>This is the fundamental trade-off between <code>ArrayList</code> and <code>LinkedList</code> in Java's Collections framework!</div></div>
+    </div>
+  </details>
+
+  <!-- Q83 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 83</span>
+      <span class="q-title">Explain Binary Search. What are its prerequisites? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Binary Search is an O(log n) algorithm that finds an element by repeatedly dividing the search interval in half. The strict prerequisite is that the data <strong>must be sorted</strong>.</div>
+      <p>Instead of checking every element (O(n)), it checks the middle. If the target is smaller, it searches the left half. If larger, the right half. This cuts the remaining elements in half every step, making it incredibly fast for large datasets.</p>
+    </div>
+  </details>
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 19: DESIGN PRINCIPLES          -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="design-principles" class="section-header">
+    <div class="section-icon" style="background:rgba(86,211,100,0.1)">📐</div>
+    <div class="section-title-wrap">
+      <h2>Design Principles &amp; Clean Code</h2>
+      <p>SOLID, DRY, KISS, and code architecture</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q84 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 84</span>
+      <span class="q-title">What are the SOLID principles? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>SOLID is an acronym for 5 design principles: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion.</div>
+      <ul>
+        <li><strong>Single Responsibility Principle (SRP):</strong> A class should have only one reason to change.</li>
+        <li><strong>Open/Closed Principle (OCP):</strong> Classes should be open for extension but closed for modification.</li>
+        <li><strong>Liskov Substitution Principle (LSP):</strong> Subclasses should be substitutable for their base classes without breaking the program.</li>
+        <li><strong>Interface Segregation Principle (ISP):</strong> Many client-specific interfaces are better than one general-purpose interface.</li>
+        <li><strong>Dependency Inversion Principle (DIP):</strong> Depend upon abstractions (interfaces), not concretions (concrete classes).</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Q85 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 85</span>
+      <span class="q-title">What do DRY and KISS stand for? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>DRY stands for "Don't Repeat Yourself" (avoiding code duplication). KISS stands for "Keep It Simple, Stupid" (avoiding unnecessary complexity).</div>
+      <p>These are fundamental clean code practices. Violating DRY leads to bugs when you update logic in one place but forget another. Violating KISS leads to unmaintainable, "clever" code that other developers cannot read.</p>
+    </div>
+  </details>
+
+  <!-- Q86 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 86</span>
+      <span class="q-title">Explain Coupling and Cohesion. <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Good software design aims for Loose Coupling (classes are independent) and High Cohesion (everything inside a class relates strongly to its single purpose).</div>
+      <ul>
+        <li><strong>Coupling:</strong> How strongly one class depends on another. You want <strong>Loose Coupling</strong> so changing one class doesn't break others (e.g., using Dependency Injection).</li>
+        <li><strong>Cohesion:</strong> How closely related the methods/fields are within a single class. You want <strong>High Cohesion</strong> (e.g., a <code>MathUtil</code> class shouldn't have a method that sends emails).</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 20: SYSTEM DESIGN BASICS       -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="system-design" class="section-header">
+    <div class="section-icon" style="background:rgba(121,192,255,0.1)">🏗️</div>
+    <div class="section-title-wrap">
+      <h2>System Design Basics</h2>
+      <p>Scalability, caching, and load balancing</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q87 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 87</span>
+      <span class="q-title">What is the difference between Horizontal and Vertical Scaling? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Vertical scaling (Scaling Up) means adding more power (CPU/RAM) to an existing machine. Horizontal scaling (Scaling Out) means adding more machines/servers to the pool.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Aspect</th><th>Vertical Scaling (Up)</th><th>Horizontal Scaling (Out)</th></tr>
+          <tr><td>How it works</td><td>Upgrade the server hardware</td><td>Add more servers</td></tr>
+          <tr><td>Limits</td><td>Hardware limits (can only get so big)</td><td>Theoretically infinite</td></tr>
+          <tr><td>Downtime</td><td>Usually requires downtime to upgrade</td><td>No downtime</td></tr>
+          <tr><td>Complexity</td><td>Very simple</td><td>Complex (needs Load Balancers, distributed state)</td></tr>
+        </table>
+      </div>
+    </div>
+  </details>
+
+  <!-- Q88 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 88</span>
+      <span class="q-title">What is a Load Balancer? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>A Load Balancer sits between clients and servers, distributing incoming network traffic across multiple backend servers to prevent any single server from becoming overwhelmed.</div>
+      <p>Common algorithms for routing traffic:</p>
+      <ul>
+        <li><strong>Round Robin:</strong> Distributes requests sequentially to each server.</li>
+        <li><strong>Least Connections:</strong> Sends the request to the server with the fewest active connections.</li>
+        <li><strong>IP Hash:</strong> Determines the server based on the client's IP address (useful for sticky sessions).</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- Q89 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 89</span>
+      <span class="q-title">Why use Caching? (e.g., Redis / Memcached) <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Caching temporarily stores frequently accessed data in fast, in-memory storage to reduce database load and dramatically improve response times.</div>
+      <div class="tip"><div>In system design, always mention cache invalidation! The hardest part of caching is knowing when the underlying data has changed so you don't serve stale data.</div></div>
+    </div>
+  </details>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 21: WEB & SECURITY BASICS      -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="web-security" class="section-header">
+    <div class="section-icon" style="background:rgba(255,166,87,0.1)">🔒</div>
+    <div class="section-title-wrap">
+      <h2>Web &amp; Security Basics</h2>
+      <p>Auth, CORS, JWT, and common vulnerabilities</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q90 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 90</span>
+      <span class="q-title">What is the difference between Session-based and Token-based (JWT) authentication? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Session auth stores user state on the server (in memory/DB) and uses a session ID cookie. Token auth (JWT) stores state on the client side in a signed token, making it stateless.</div>
+      <div class="tip"><div>JWTs are stateless and highly scalable, making them the standard for REST APIs and Microservices where you have multiple backend servers.</div></div>
+    </div>
+  </details>
+
+  <!-- Q91 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 91</span>
+      <span class="q-title">What is CORS? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>CORS (Cross-Origin Resource Sharing) is a browser security feature that prevents a website on one domain from making API requests to a different domain unless the server explicitly allows it.</div>
+      <p>Servers allow requests by responding with specific HTTP headers, primarily <code>Access-Control-Allow-Origin: *</code>.</p>
+    </div>
+  </details>
+
+  <!-- Q92 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 92</span>
+      <span class="q-title">What is SQL Injection and how do you prevent it? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>SQL Injection is an attack where malicious SQL statements are inserted into an input field. Prevent it by always using Prepared Statements (parameterized queries) or an ORM like Hibernate.</div>
+    </div>
+  </details>
+
+  <!-- Q93 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 93</span>
+      <span class="q-title">What are XSS and CSRF? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>XSS (Cross-Site Scripting) is injecting malicious JavaScript into a site. CSRF (Cross-Site Request Forgery) tricks an authenticated user's browser into performing unwanted actions on another site.</div>
+      <ul>
+        <li><strong>Prevent XSS:</strong> Escape/sanitize all user input before rendering it in the browser.</li>
+        <li><strong>Prevent CSRF:</strong> Use anti-CSRF tokens, SameSite cookies, and require re-authentication for sensitive actions.</li>
+      </ul>
+    </div>
+  </details>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- SECTION 22: PERFORMANCE & DEBUGGING    -->
+  <!-- ═══════════════════════════════════════ -->
+  <div id="performance" class="section-header">
+    <div class="section-icon" style="background:rgba(210,168,255,0.1)">🚀</div>
+    <div class="section-title-wrap">
+      <h2>Performance &amp; Debugging</h2>
+      <p>Profiling, connection pooling, and troubleshooting</p>
+    </div>
+    <div class="section-divider"></div>
+  </div>
+
+  <!-- Q94 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 94</span>
+      <span class="q-title">Why use Database Connection Pooling? (e.g., HikariCP) <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Opening and closing a physical database connection over the network is extremely slow. A connection pool keeps a set of connections open and reuses them, dramatically improving performance.</div>
+      <p>In Spring Boot, HikariCP is the default, highly-optimized connection pool.</p>
+    </div>
+  </details>
+
+  <!-- Q95 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 95</span>
+      <span class="q-title">How do you debug a slow Java application? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Use a Java Profiler (VisualVM, JProfiler, YourKit) to find CPU bottlenecks, analyze Heap Dumps for memory leaks, and check database slow query logs.</div>
+      <ul>
+        <li>Look for the N+1 query problem.</li>
+        <li>Check if the application is spending too much time in Garbage Collection (Heap is too small).</li>
+        <li>Identify deadlocks using Thread Dumps (via <code>jstack</code>).</li>
+      </ul>
+    </div>
+  </details>
+</div>
 
 <script>
+  // Smooth open/close animation
+  // Simple Login System
+  const loginOverlay = document.createElement('div');
+  loginOverlay.innerHTML = `
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+      <div style="background: var(--bg2); padding: 40px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center;">
+        <h2 style="color: #fff; margin-bottom: 8px;">Welcome to Java Prep</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Login to access the content</p>
+        <input type="text" id="username" placeholder="Username (guest or paid)" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: #fff;">
+        <input type="password" id="password" placeholder="Password (any)" style="width: 100%; padding: 12px; margin-bottom: 24px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: #fff;">
+        <button id="loginBtn" style="width: 100%; padding: 12px; background: var(--accent2); color: #000; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Login</button>
+        <p id="loginError" style="color: #ff7b72; font-size: 13px; margin-top: 16px; display: none;">Invalid credentials. Use 'guest' or 'paid'.</p>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(loginOverlay);
+
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const user = document.getElementById('username').value.trim().toLowerCase();
+
+    if (user === 'guest' || user === 'demo') {
+      loginOverlay.remove();
+      applyGuestRestrictions();
+    } else if (user === 'paid' || user === 'pro') {
+      loginOverlay.remove();
+      // Paid user gets full access by default, nothing to restrict
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  });
+
+  function applyGuestRestrictions() {
+    const details = document.querySelectorAll('details');
+    // Allow first 2 questions, restrict the rest
+    for (let i = 2; i < details.length; i++) {
+      const answerBody = details[i].querySelector('.answer-body');
+      if (answerBody) {
+        answerBody.style.filter = 'blur(5px)';
+        answerBody.style.userSelect = 'none';
+        answerBody.style.pointerEvents = 'none';
+
+        // Create an overlay lock message
+        const lockMsg = document.createElement('div');
+        lockMsg.innerHTML = `
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: rgba(13, 17, 23, 0.4);">
+            <div style="background: var(--bg2); padding: 12px 24px; border-radius: 8px; border: 1px solid var(--border); font-weight: 600; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+              🔒 Unlock this feature by purchasing access
+            </div>
+          </div>
+        `;
+
+        // Wrap the answer body to apply relative positioning for the absolute overlay
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'relative';
+
+        // Move the answer body into the wrapper
+        details[i].insertBefore(wrapper, answerBody);
+        wrapper.appendChild(answerBody);
+        wrapper.appendChild(lockMsg);
+      }
+    }
+  }
+
   // Smooth open/close animation
   document.querySelectorAll('details').forEach(detail => {
     detail.addEventListener('toggle', () => {
