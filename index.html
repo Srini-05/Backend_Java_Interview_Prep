@@ -115,6 +115,12 @@
     border-radius: 12px;
     padding: 28px 32px;
     margin-bottom: 48px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   }
   .toc h2 {
     font-size: 13px;
@@ -2651,7 +2657,6 @@ cache.put(<span class="kw">new</span> <span class="cl">Key</span>(<span class="s
     </div>
   </details>
 
-</div>
   <!-- ═══════════════════════════════════════ -->
   <!-- SECTION 15: FILE HANDLING & I/O        -->
   <!-- ═══════════════════════════════════════ -->
@@ -3278,6 +3283,8 @@ cache.put(<span class="kw">new</span> <span class="cl">Key</span>(<span class="s
     from { opacity: 0; transform: translateY(-6px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+
+  html { scroll-behavior: smooth; }
 </style>
 
 </body>
