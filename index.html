@@ -3196,24 +3196,33 @@ cache.put(<span class="kw">new</span> <span class="cl">Key</span>(<span class="s
       <div style="background: var(--bg2); padding: 40px; border-radius: 12px; border: 1px solid var(--border); width: 100%; max-width: 400px; text-align: center;">
         <h2 style="color: #fff; margin-bottom: 8px;">Welcome to Java Prep</h2>
         <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 24px;">Login to access the content</p>
-        <input type="text" id="username" placeholder="Username (guest or paid)" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: #fff;">
-        <input type="password" id="password" placeholder="Password (any)" style="width: 100%; padding: 12px; margin-bottom: 24px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: #fff;">
+        <input type="text" id="username" placeholder="Username" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: #fff;">
+        <input type="password" id="password" placeholder="Password" style="width: 100%; padding: 12px; margin-bottom: 24px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: #fff;">
         <button id="loginBtn" style="width: 100%; padding: 12px; background: var(--accent2); color: #000; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Login</button>
-        <p id="loginError" style="color: #ff7b72; font-size: 13px; margin-top: 16px; display: none;">Invalid credentials. Use 'guest' or 'paid'.</p>
+        <p id="loginError" style="color: #ff7b72; font-size: 13px; margin-top: 16px; display: none;">Invalid username or password.</p>
       </div>
     </div>
   `;
   document.body.appendChild(loginOverlay);
 
-  document.getElementById('loginBtn').addEventListener('click', () => {
-    const user = document.getElementById('username').value.trim().toLowerCase();
+  const allowedUsers = [
+    { username: 'user123', password: 'password123', role: 'paid' },
+    { username: 'guest', password: 'password123', role: 'guest' }
+  ];
 
-    if (user === 'guest' || user === 'demo') {
-      loginOverlay.remove();
-      applyGuestRestrictions();
-    } else if (user === 'paid' || user === 'pro') {
-      loginOverlay.remove();
-      // Paid user gets full access by default, nothing to restrict
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+
+    const matchedUser = allowedUsers.find(u => u.username === user && u.password === pass);
+
+    if (matchedUser) {
+      if (matchedUser.role === 'guest') {
+        loginOverlay.remove();
+        applyGuestRestrictions();
+      } else if (matchedUser.role === 'paid') {
+        loginOverlay.remove();
+      }
     } else {
       document.getElementById('loginError').style.display = 'block';
     }
