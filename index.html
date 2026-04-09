@@ -2152,6 +2152,93 @@ list.add(<span class="num">5</span>);  <span class="cm">// autoboxed to Integer.
     </div>
   </details>
 
+  <!-- Q51 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 51</span>
+      <span class="q-title">What is a Marker Interface in Java? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>A Marker Interface is an empty interface (no methods or fields) used to signal or "mark" a class to the JVM or a framework to grant it some special behavior.</div>
+      <h4>Common Examples</h4>
+      <ul>
+        <li><strong>Serializable</strong> — Tells the JVM the object can be converted to a byte stream.</li>
+        <li><strong>Cloneable</strong> — Tells the JVM the <code>Object.clone()</code> method is allowed to clone the object.</li>
+        <li><strong>RandomAccess</strong> — Tells Collections that the list supports fast O(1) random access (like ArrayList).</li>
+      </ul>
+      <div class="tip"><div>Since Java 8, marker interfaces are mostly replaced by Annotations (e.g., <code>@Entity</code>, <code>@Transactional</code>), which provide more metadata and flexibility.</div></div>
+    </div>
+  </details>
+
+  <!-- Q52 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 52</span>
+      <span class="q-title">What is the difference between fail-fast and fail-safe iterators? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>Fail-fast iterators throw a ConcurrentModificationException if the collection is modified while iterating. Fail-safe iterators work on a clone of the collection and do not throw an exception.</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Feature</th><th>Fail-Fast</th><th>Fail-Safe</th></tr>
+          <tr><td>Throws Exception?</td><td>✅ Yes (ConcurrentModificationException)</td><td>❌ No</td></tr>
+          <tr><td>Iterates over</td><td>Original Collection</td><td>A clone/snapshot of the collection</td></tr>
+          <tr><td>Memory Overhead</td><td>Low</td><td>High (needs extra memory for clone)</td></tr>
+          <tr><td>Examples</td><td>ArrayList, HashMap, HashSet</td><td>ConcurrentHashMap, CopyOnWriteArrayList</td></tr>
+        </table>
+      </div>
+      <div class="tip"><div>The JVM checks for modifications using an internal <code>modCount</code> variable in fail-fast collections. If <code>modCount</code> changes during iteration, it fails fast!</div></div>
+    </div>
+  </details>
+
+  <!-- Q53 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 53</span>
+      <span class="q-title">How does ConcurrentHashMap work internally? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>ConcurrentHashMap allows concurrent read and write operations by locking only a specific portion (bucket/node) of the map instead of the whole map, enabling high performance in multi-threaded environments.</div>
+      <h4>Evolution of ConcurrentHashMap</h4>
+      <ul>
+        <li><strong>Java 7 (Segment Locking):</strong> The map was divided into segments (default 16). Each segment had its own lock. Multiple threads could write simultaneously if they were in different segments.</li>
+        <li><strong>Java 8+ (Node Locking):</strong> Segments were removed. It now locks at the individual Node (bucket) level using the Compare-And-Swap (CAS) algorithm and <code>synchronized</code> blocks only when adding to a bucket.</li>
+      </ul>
+      <pre><code><span class="cm">// Reads are fully lock-free!</span>
+<span class="cl">ConcurrentHashMap</span>&lt;<span class="cl">String</span>, <span class="cl">Integer</span>&gt; map = <span class="kw">new</span> <span class="cl">ConcurrentHashMap</span>&lt;&gt;();
+map.put(<span class="str">"Java"</span>, <span class="num">21</span>); <span class="cm">// Locks only the bucket where "Java" goes</span></code></pre>
+      <div class="tip"><div>Unlike HashMap, ConcurrentHashMap does <strong>not</strong> allow <code>null</code> keys or <code>null</code> values. This avoids ambiguity in concurrent reads (e.g. is the value null, or is the key missing?).</div></div>
+    </div>
+  </details>
+
+  <!-- Q54 -->
+  <details>
+    <summary>
+      <span class="q-num">Q 54</span>
+      <span class="q-title">What is a Memory Leak in Java and how does it happen despite GC? <span class="new-badge">Added</span></span>
+      <span class="q-chevron">▼</span>
+    </summary>
+    <div class="answer-body">
+      <div class="quick-answer"><strong>One-Line Answer</strong>A memory leak occurs when objects are no longer needed by the application but are still referenced, preventing the Garbage Collector from freeing their memory, eventually causing an OutOfMemoryError.</div>
+      <h4>Common Causes of Memory Leaks</h4>
+      <ul>
+        <li><strong>Static Collections:</strong> Using a <code>static</code> Map or List that continuously grows. Static variables live as long as the class is loaded.</li>
+        <li><strong>Unclosed Resources:</strong> Forgetting to close streams, DB connections, or sockets (always use try-with-resources).</li>
+        <li><strong>ThreadLocals:</strong> If not cleared properly in environments like thread pools, the ThreadLocal object stays in memory.</li>
+        <li><strong>Improper equals() and hashCode():</strong> Using custom objects as keys in a HashMap without proper equals/hashCode means duplicates keep getting added, never matched or overwritten.</li>
+      </ul>
+      <pre><code><span class="cm">// Example: Bad Key in HashMap</span>
+<span class="kw">class</span> <span class="cl">Key</span> { <span class="cl">String</span> name; <span class="kw">public</span> <span class="cl">Key</span>(<span class="cl">String</span> name) { <span class="kw">this</span>.name = name; } } <span class="cm">// missing equals/hashCode</span>
+<span class="cl">Map</span>&lt;<span class="cl">Key</span>, <span class="cl">String</span>&gt; cache = <span class="kw">new</span> <span class="cl">HashMap</span>&lt;&gt;();
+cache.put(<span class="kw">new</span> <span class="cl">Key</span>(<span class="str">"id1"</span>), <span class="str">"data"</span>);
+cache.put(<span class="kw">new</span> <span class="cl">Key</span>(<span class="str">"id1"</span>), <span class="str">"data"</span>); <span class="cm">// Adds a new entry instead of replacing!</span></code></pre>
+      <div class="tip"><div>To find memory leaks, take a Heap Dump (using tools like jmap or jcmd) and analyze it with Eclipse MAT or VisualVM to find which objects are holding onto memory.</div></div>
+    </div>
+  </details>
+
 </div>
 
 <script>
